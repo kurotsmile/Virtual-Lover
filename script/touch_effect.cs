@@ -39,11 +39,6 @@ public class touch_effect : MonoBehaviour {
 			GameObject effect_clone = Instantiate (this.effect2);
 			effect_clone.transform.position = new Vector3 (clickedPosition.x, clickedPosition.y, -2f);
 			Destroy (effect_clone, 1f);
-
-            if (GameObject.Find("mygirl").GetComponent<Sub_menu>().panel_menu_sub.activeInHierarchy)
-            {
-                GameObject.Find("mygirl").GetComponent<Sub_menu>().close();
-            }
 		}
 	}
 }

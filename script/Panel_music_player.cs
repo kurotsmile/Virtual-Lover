@@ -453,7 +453,7 @@ public class Panel_music_player : MonoBehaviour {
 
 	public void get_mp3_file()
     {
-		GameObject.Find("mygirl").GetComponent<mygirl>().buy_product(1);
+		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.buy_product(1);
 	}
 
 	public void act_download_mp3()

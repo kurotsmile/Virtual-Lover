@@ -40,39 +40,39 @@ public class Panel_msg_box_func : MonoBehaviour {
 		this.tr_body.parent.GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
 		if (func == 0) {
 			this.gameObject.SetActive(true);
-			GameObject.Find("mygirl").GetComponent<mygirl>().show_magic_touch(false);
+			app.show_magic_touch(false);
 			this.check_option_music();
 
-			WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("list_music");
-			frm.AddField("key_seach", GameObject.Find("mygirl").GetComponent<mygirl>().parameter_link);
+			WWWForm frm = app.frm_action("list_music");
+			frm.AddField("key_seach", app.parameter_link);
 			frm.AddField("search_option", PlayerPrefs.GetInt("sel_option_music", 0).ToString());
-			GameObject.Find("mygirl").GetComponent<mygirl>().is_seach_music_list = true;
-			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_get_list_music);
+			app.is_seach_music_list = true;
+			//app.carrot.send(frm, this.act_get_list_music);
 		}
 
 		if (func == 1) {
-			WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("list_background");
+			WWWForm frm = app.frm_action("list_background");
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
-			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_get_list_background);
+			//app.carrot.send(frm, this.act_get_list_background);
 		}
 
 		if (func == 2) {
-			WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("list_contact");
-			frm.AddField("search", GameObject.Find("mygirl").GetComponent<mygirl>().parameter_link);
+			WWWForm frm = app.frm_action("list_contact");
+			frm.AddField("search", app.parameter_link);
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
-			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_get_list_contact);
+			//app.carrot.send(frm, this.act_get_list_contact);
 		}
 
 		if (func == 3) {
-			WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("list_radio");
+			WWWForm frm = app.frm_action("list_radio");
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
-			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_get_list_radio);
+			//app.carrot.send(frm, this.act_get_list_radio);
 		}
 
 		if (func == 4) {
-			WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("list_person");
+			WWWForm frm = app.frm_action("list_person");
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
-			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_get_list_person);
+			//app.carrot.send(frm, this.act_get_list_person);
 		}
 
 		this.id_func = func;
@@ -112,8 +112,8 @@ public class Panel_msg_box_func : MonoBehaviour {
 			ColorUtility.TryParseHtmlString(chat["color"].ToString(), out myColor);
 			tip_chat_item.GetComponent<Panel_msg_item>().img.color = myColor;
 		}
-		GameObject.Find("mygirl").GetComponent<mygirl>().is_seach_music_list = true;
-		GameObject.Find("mygirl").GetComponent<mygirl>().act_no_magic_touch();
+		app.is_seach_music_list = true;
+		app.act_no_magic_touch();
 	}
 
 	private void act_get_list_background(string s_data)
@@ -128,10 +128,8 @@ public class Panel_msg_box_func : MonoBehaviour {
 			tip_chat_item.transform.localPosition = new Vector3(tip_chat_item.transform.localPosition.x, tip_chat_item.transform.localPosition.y, 0f);
 			tip_chat_item.transform.localScale = new Vector3(1f, 1f, 1f);
 			tip_chat_item.GetComponent<Panel_msg_item>().id = bk["url"].ToString();
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_img(bk["url_thumb"].ToString(), tip_chat_item.GetComponent<Panel_msg_item>().img);
+			app.carrot.get_img(bk["url_thumb"].ToString(), tip_chat_item.GetComponent<Panel_msg_item>().img);
 		}
-
-		if (data["list_menu"] != null) GameObject.Find("mygirl").GetComponent<Sub_menu>().show_menu_sub((IList)data["list_menu"]);
 	}
 
 	private void act_get_list_contact(string s_data)
@@ -157,7 +155,7 @@ public class Panel_msg_box_func : MonoBehaviour {
 				tip_chat_item.GetComponent<Panel_item_contact>().icon_sex.sprite = icon[0];
 				tip_chat_item.GetComponent<Panel_item_contact>().img_panel.color = this.colorsex[0];
 			}
-			if(user["avatar"]!=null) GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_img(user["avatar"].ToString(), tip_chat_item.GetComponent<Panel_item_contact>().avatar);
+			if(user["avatar"]!=null) app.carrot.get_img(user["avatar"].ToString(), tip_chat_item.GetComponent<Panel_item_contact>().avatar);
 		}
 
 	}
@@ -175,9 +173,8 @@ public class Panel_msg_box_func : MonoBehaviour {
 			radio_item.transform.localScale = new Vector3(1f, 1f, 1f);
 			radio_item.GetComponent<Panel_radio_item>().txt_name.text = r["name_radio"].ToString();
 			radio_item.GetComponent<Panel_radio_item>().str_url_stream = r["stream"].ToString();
-			if(r["avatar"]!=null)GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_img(r["avatar"].ToString(), radio_item.GetComponent<Panel_radio_item>().ico);
+			if(r["avatar"]!=null)app.carrot.get_img(r["avatar"].ToString(), radio_item.GetComponent<Panel_radio_item>().ico);
 		}
-		if (data["list_menu"] != null) GameObject.Find("mygirl").GetComponent<Sub_menu>().show_menu_sub((IList)data["list_menu"]);
 	}
 
 	private void act_get_list_person(string s_data)
@@ -191,7 +188,7 @@ public class Panel_msg_box_func : MonoBehaviour {
 			person_item.transform.localPosition = new Vector3(person_item.transform.localPosition.x, person_item.transform.localPosition.y, 0f);
 			person_item.transform.localScale = new Vector3(1f, 1f, 1f);
 			person_item.GetComponent<Panel_person_item>().data = chat["data"].ToString();
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_img(chat["icon"].ToString(), person_item.GetComponent<Panel_person_item>().avatar);
+			app.carrot.get_img(chat["icon"].ToString(), person_item.GetComponent<Panel_person_item>().avatar);
 		}
 	}
 
@@ -205,17 +202,16 @@ public class Panel_msg_box_func : MonoBehaviour {
         StopAllCoroutines ();
 		this.gameObject.SetActive (false);
 		this.panel_tip_seach_list_music.SetActive (false);
-		GameObject.Find ("mygirl").GetComponent<Sub_menu> ().close ();
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().show_btn_main (false);
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().show_magic_touch (true);
+		app.show_btn_main (false);
+		app.show_magic_touch (true);
 		if (this.id_func == 0) {
-			GameObject.Find ("mygirl").GetComponent<mygirl>().is_seach_music_list = false;
+			app.is_seach_music_list = false;
 		}
 	}
 
 	public void set_bk(string url){
-		//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.slider_loading.maxValue = 1;
-		//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_loading_with_process_bar();
+		//app.carrot.slider_loading.maxValue = 1;
+		//app.carrot.show_loading_with_process_bar();
 		StartCoroutine (downloadBk (url));
 	}
 
@@ -224,16 +220,16 @@ public class Panel_msg_box_func : MonoBehaviour {
 		www.SendWebRequest();
 		while (!www.isDone)
 		{
-			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.slider_loading.value = www.downloadProgress;
+			//app.carrot.slider_loading.value = www.downloadProgress;
 			yield return null;
 		}
 
 		if (www.result==UnityWebRequest.Result.Success)
 		{
 			Texture2D profilePic = ((DownloadHandlerTexture)www.downloadHandler).texture;
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.hide_loading();
-			GameObject.Find("mygirl").GetComponent<mygirl>().set_skybox_Texture(profilePic);
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_tool().save_file("bk.png", profilePic.EncodeToPNG());
+			app.carrot.hide_loading();
+			app.set_skybox_Texture(profilePic);
+			app.carrot.get_tool().save_file("bk.png", profilePic.EncodeToPNG());
 		}
 	}
 
@@ -259,7 +255,7 @@ public class Panel_msg_box_func : MonoBehaviour {
 				item_contact_full.GetComponent<Panel_item_contact>().icon_sex.sprite = this.icon[1];
 		}
 
-		GameObject.Find("mygirl").GetComponent<mygirl>().act_no_magic_touch();
+		app.act_no_magic_touch();
 	}
 
 }

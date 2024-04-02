@@ -12,14 +12,10 @@ public class mygirl : MonoBehaviour
 
     [Header("Panel App")]
     public GameObject panel_button;
-    public GameObject panel_setting;
-    public GameObject panel_learn;
-    public GameObject panel_report;
     public GameObject panel_msg_func;
     public GameObject panel_msg_menu;
     public GameObject panel_fnc_music;
     public GameObject panel_btn_main;
-    public GameObject panel_btn_music_emotions;
     public GameObject panel_chat_me;
     public panel_chat_box chat_box;
     public Panel_music_player panel_music;
@@ -38,7 +34,6 @@ public class mygirl : MonoBehaviour
     public Text txt_chat_me;
     public AudioSource sound_chat;
     public Image img_sound;
-    private int sound = 0;
     private float count_time_next_chat = 0f;
     private float count_byebye = 0f;
     private int count_ads = 0;
@@ -47,7 +42,6 @@ public class mygirl : MonoBehaviour
     private int sex = 0;
     public Text txt_show_inp_chat;
     private string id_question = "";
-    private string type_question = "";
     private string func_server = "";
     private string str_effect;
 
@@ -57,32 +51,6 @@ public class mygirl : MonoBehaviour
     public Person person;
     public GameObject area_effect;
 
-    [Header("Setting")]
-    public Sprite[] icon_on_off;
-    public Image icon_lang;
-    public Image setting_img_icon_lang;
-    public Text setting_txt_name_lang;
-    public Slider slider_setting_voice_speed;
-    public Slider slider_setting_limit_chat;
-    public InputField inputField_character_name;
-    public Text txt_setting_limit_chat_tip;
-    public AudioSource audio_setting_test;
-    public Image[] btn_sel_sex;
-    public Text txt_setting_effect;
-    public Text txt_setting_color_chat;
-    public Image icon_setting_effect;
-    public Image icon_setting_color_chat;
-
-    private AudioClip sex0Audio_setting_test;
-    private AudioClip sex1Audio_setting_test;
-    private int setting_effect_chat = 1;
-    private int setting_color_chat = 1;
-    private int val_setting_sex;
-    private int val_setting_effect_chat;
-    private int val_setting_color_chat;
-    public GameObject panel_setting_removeAds;
-    public GameObject button_removeads_box_msg;
-    public GameObject button_viewads_box_msg;
 
     [Header("Object Default")]
     public Texture2D bk_default;
@@ -95,15 +63,6 @@ public class mygirl : MonoBehaviour
     private bool is_waiting_voice = false;
     public Image icon_avatar;
 
-#if UNITY_IOS
-	private string gameId = "1647930";
-#elif UNITY_ANDROID
-    private string gameId = "1647929";
-    private AndroidJavaObject camera1;
-#else
-    private string gameId = "1647929";
-#endif
-
     public string parameter_link = "";
     public bool is_seach_music_list = false;
 
@@ -114,8 +73,6 @@ public class mygirl : MonoBehaviour
         Screen.sleepTimeout = (int)SleepTimeout.NeverSleep;
 
         this.carrot.Load_Carrot(check_ext_app);
-        this.carrot.shop.onCarrotPaySuccess = this.onBuySuccessPayCarrot;
-        this.carrot.shop.onCarrotRestoreSuccess = this.onRestoreSuccessPayCarrot;
         this.carrot.act_after_close_all_box = this.act_after_close_all_box;
 
         this.GetComponent<Tip_chat>().is_active = false;
@@ -123,25 +80,16 @@ public class mygirl : MonoBehaviour
         this.GetComponent<Brain>().check();
         this.GetComponent<Music_offline>().check();
 
-        this.sound = PlayerPrefs.GetInt("sound", 0);
-        this.setting_effect_chat = PlayerPrefs.GetInt("setting_effect_chat", 1);
-        this.setting_color_chat = PlayerPrefs.GetInt("setting_color_chat", 1);
-        this.check_sound();
-
         this.load_background();
 
         this.panel_button.SetActive(true);
-        this.panel_setting.SetActive(false);
         this.panel_chat_me.SetActive(false);
-        this.panel_learn.SetActive(false);
-        this.panel_report.SetActive(false);
         this.panel_music.gameObject.SetActive(false);
         this.panel_msg_func.SetActive(false);
         this.panel_msg_menu.SetActive(false);
         this.panel_fnc_music.SetActive(false);
         this.icon_loading.SetActive(false);
         this.panel_btn_main.SetActive(true);
-        this.panel_btn_music_emotions.SetActive(false);
     }
 
     private void check_ext_app()
@@ -149,16 +97,6 @@ public class mygirl : MonoBehaviour
         if (this.panel_msg_func.activeInHierarchy)
         {
             this.panel_msg_func.GetComponent<Panel_msg_box_func>().btn_close();
-            this.carrot.set_no_check_exit_app();
-        }
-        else if (this.panel_setting.activeInHierarchy)
-        {
-            this.panel_setting.SetActive(false);
-            this.Magic_tocuh.SetActive(true);
-            this.carrot.set_no_check_exit_app();
-        }
-        else if (this.panel_recoding.panel_voice_maximize.activeInHierarchy)
-        {
             this.carrot.set_no_check_exit_app();
         }
         else if (this.panel_msg_menu.activeInHierarchy)
@@ -181,12 +119,11 @@ public class mygirl : MonoBehaviour
 
     public void load_app_offline()
     {
-        this.txt_girl_chat.text = PlayerPrefs.GetString("lost_connection_msg", "Lost connection! please check the network connection or 3g, wifi");
+        this.txt_girl_chat.text = carrot.L("lost_connection_msg", "Lost connection! please check the network connection or 3g, wifi");
     }
 
     private void act_after_close_all_box()
     {
-        if(this.panel_learn.activeInHierarchy==false&&this.panel_report.activeInHierarchy==false)
         this.show_magic_touch(true);
     }
 
@@ -201,7 +138,7 @@ public class mygirl : MonoBehaviour
     private void load_msg_start(string s_data)
     {
         StructuredQuery q = new StructuredQuery("chat-" + carrot.lang.Get_key_lang());
-        q.Add_where("key", Query_OP.EQUAL,"hi-"+DateTime.Now.Hour);
+        q.Add_where("key", Query_OP.EQUAL,"hi_"+DateTime.Now.Hour);
         q.Set_limit(1);
         carrot.server.Get_doc(q.ToJson(),Act_msg_hi_done);
     }
@@ -212,7 +149,7 @@ public class mygirl : MonoBehaviour
         if (!fc.is_null)
         {
             IDictionary data_chat = fc.fire_document[0].Get_IDictionary();
-            Debug.Log(data_chat["msg"].ToString());
+            this.act_chat_girl(data_chat);
         }
     }
 
@@ -220,7 +157,6 @@ public class mygirl : MonoBehaviour
     {
         WWWForm frm_chat =new WWWForm();
         frm_chat.AddField("id_question", this.id_question);
-        frm_chat.AddField("type_question", this.type_question);
         frm_chat.AddField("sex", PlayerPrefs.GetInt("sex", 0));
         frm_chat.AddField("lang", PlayerPrefs.GetString("key", "vi"));
         frm_chat.AddField("version", "1");
@@ -259,11 +195,8 @@ public class mygirl : MonoBehaviour
     void Update()
     {
         if (
-            this.panel_setting.activeInHierarchy == false &&
-            this.panel_learn.activeInHierarchy == false &&
             this.str_effect != "2" &&
             this.panel_msg_func.activeInHierarchy == false &&
-            this.panel_report.activeInHierarchy == false &&
             this.panel_msg_menu.activeInHierarchy == false&&
             this.carrot.is_online()
             )
@@ -292,7 +225,7 @@ public class mygirl : MonoBehaviour
                 }
             }
 
-            if (sound == 0)
+            if (carrot.get_status_sound())
             {
                 if (this.panel_recoding.panel_voice.activeInHierarchy)
                 {
@@ -345,36 +278,6 @@ public class mygirl : MonoBehaviour
         Destroy(customer_effect, 6f);
     }
 
-    IEnumerator downloadAudio_setting(string s_chat, int type_audi)
-    {
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(s_chat, AudioType.MPEG))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.result==UnityWebRequest.Result.Success)
-            {
-                if (type_audi == 0)
-                {
-                    this.sex0Audio_setting_test = DownloadHandlerAudioClip.GetContent(www);
-                }
-                else
-                {
-                    this.sex1Audio_setting_test = DownloadHandlerAudioClip.GetContent(www);
-                    if (this.sex == 0)
-                    {
-                        this.slider_setting_voice_speed.value = PlayerPrefs.GetFloat("voice_speed0", 1.2f);
-                        this.audio_setting_test.clip = this.sex0Audio_setting_test;
-                    }
-                    else
-                    {
-                        this.slider_setting_voice_speed.value = PlayerPrefs.GetFloat("voice_speed1", 1f);
-                        this.audio_setting_test.clip = this.sex1Audio_setting_test;
-                    }
-                }
-            }
-        }
-    }
-
     public void play_s()
     {
         if (this.is_seach_music_list == true && this.panel_msg_func.activeInHierarchy == true)
@@ -422,19 +325,14 @@ public class mygirl : MonoBehaviour
         this.count_time_next_chat = 0f;
     }
 
-    public void act_chat_girl(string s_data)
+    public void act_chat_girl(IDictionary chat)
     {
-        if (this.carrot.model_app == Carrot.ModelApp.Develope) Debug.Log("Chat:" + s_data);
-
-        IDictionary data = (IDictionary)Carrot.Json.Deserialize(s_data);
-        IDictionary chat = (IDictionary)data["chat"];
-
-        if (chat["effect"].ToString() != "2") this.txt_girl_chat.text = chat["chat"].ToString().ToLower();
+        this.txt_girl_chat.text = chat["msg"].ToString().ToLower();
         this.chat_box.set_show_text();
 
         this.person.set_status(chat["status"].ToString());
 
-        if (this.setting_color_chat == 1)
+        if (chat["color"]!=null)
         {
             if (chat["color"].ToString() == "")
                 this.sp_chat.color = this.color_chat;
@@ -446,10 +344,9 @@ public class mygirl : MonoBehaviour
             }
         }
 
-        string s_chat = chat["chat"].ToString().ToLower();
+        string s_chat = chat["msg"].ToString().ToLower();
 
-        this.id_question = chat["id_chat"].ToString();
-        this.type_question = chat["type_chat"].ToString();
+        this.id_question = chat["id"].ToString();
 
         if (chat["func_sever"] != null)
             this.func_server = chat["func_sever"].ToString();
@@ -491,32 +388,17 @@ public class mygirl : MonoBehaviour
             }
         }
 
-#if !UNITY_STANDALONE
-        if (chat["vibrate"].ToString() != "")Handheld.Vibrate();
-#endif
-
-        if (chat["effect"].ToString() != "")
+        if (chat["vibrate"] != null)
         {
-            if (chat["effect"].ToString() != "2") this.create_effect(chat["effect"].ToString());
-
-
-            if (chat["effect"].ToString() == "44")
-            {
-                if (data["all_tip"] != null)
-                {
-                    GameObject.Find("mygirl").GetComponent<Sub_menu>().act_sub_function_one_on_list((IList)data["all_tip"]);
-                    data["all_tip"] = "";
-                }
-            }
+            if (chat["vibrate"].ToString() != "") carrot.play_vibrate();
+        }
+ 
+        if (chat["icon"].ToString() != "")
+        {
+            StartCoroutine(downloadEffectCustomer(chat["icon"].ToString()));
         }
 
-        if (chat["effect_customer"].ToString() != "")
-        {
-            if (this.setting_effect_chat == 1) StartCoroutine(downloadEffectCustomer(chat["effect_customer"].ToString()));
-        }
-
-
-        if (this.sound == 0)
+        if (carrot.get_status_sound())
         {
             if (chat["mp3"].ToString() != "" && chat["effect"].ToString() != "2")
             {
@@ -537,20 +419,7 @@ public class mygirl : MonoBehaviour
             this.panel_music.id_chat_music = this.id_question;
         }
 
-        if (chat["field_chat"] != null)
-        {
-            IList all_field_chat = (IList)chat["field_chat"];
-            if (all_field_chat.Count > 0)
-                this.GetComponent<Sub_menu>().show_menu_sub(all_field_chat);
-            else
-                this.GetComponent<Sub_menu>().close();
-        }
-        else this.GetComponent<Sub_menu>().close();
-
-        if (data["tip_chat"]!=null) this.GetComponent<Tip_chat>().set_list_tip((IList)data["tip_chat"]);
-        if (data["list_contact"]!= null) this.panel_msg_func.GetComponent<Panel_msg_box_func>().show_list_contact_full((IList)data["list_contact"]);
-
-            this.inpText.text = "";
+        this.inpText.text = "";
         this.parameter_link = "";
         this.Magic_tocuh.SetActive(true);
     }
@@ -609,32 +478,16 @@ public class mygirl : MonoBehaviour
             effect_nv.name = "snow";
             effect_nv.transform.SetParent(this.area_effect.transform);
         }
-#if !UNITY_STANDALONE
-        //bat den pin
+
         if (effect_str == "8")
         {
-            AndroidJavaClass cameraClass = new AndroidJavaClass("android.hardware.Camera");
-            WebCamDevice[] devices = WebCamTexture.devices;
-            camera1 = cameraClass.CallStatic<AndroidJavaObject>("open", 0);
 
-            if (camera1 != null)
-            {
-                AndroidJavaObject cameraParameters = camera1.Call<AndroidJavaObject>("getParameters");
-                cameraParameters.Call("setFlashMode", "torch");
-                camera1.Call("setParameters", cameraParameters);
-                camera1.Call("startPreview");
-            }
         }
         //tac den pin
         if (effect_str == "9")
         {
-            if (camera1 != null)
-            {
-                camera1.Call("stopPreview");
-                camera1.Call("release");
-            }
+
         }
-#endif
         //off music
         if (effect_str == "10") this.panel_music.btn_delete_music();
         //List music
@@ -685,7 +538,6 @@ public class mygirl : MonoBehaviour
         if (this.count_ads_2 == 2)
         {
             this.show_ads();
-            this.button_viewads_box_msg.SetActive(false);
         }
         count_ads_2++;
     }
@@ -725,81 +577,18 @@ public class mygirl : MonoBehaviour
         }
     }
 
-    public void set_sound()
-    {
-        if (this.sound == 0)
-            this.sound = 1;
-        else
-        {
-            this.sound = 0;
-            this.sound_chat.Play();
-        }
-        PlayerPrefs.SetInt("sound", this.sound);
-        this.check_sound();
-    }
-
-    public void check_sound()
-    {
-        if (this.sound == 0)
-        {
-            this.img_sound.sprite = this.icon[2];
-            this.speech.mute = false;
-        }
-        else
-        {
-            this.img_sound.sprite = this.icon[3];
-            this.speech.mute = true;
-        }
-    }
-
-
     public void set_sex(int intsex)
     {
-        this.btn_sel_sex[0].color = this.color_sel_nomal;
-        this.btn_sel_sex[1].color = this.color_sel_nomal;
-
         if (intsex == 0)
         {
-            this.btn_sel_sex[1].color = this.color_sel_select;
             this.sex = 0;
         }
         else
         {
-            this.btn_sel_sex[0].color = this.color_sel_select;
             this.sex = 1;
         }
-
-        if (this.sex == 0)
-        {
-            this.slider_setting_voice_speed.value = PlayerPrefs.GetFloat("voice_speed0", 1.2f);
-            this.audio_setting_test.clip = this.sex0Audio_setting_test;
-        }
-        else
-        {
-            this.slider_setting_voice_speed.value = PlayerPrefs.GetFloat("voice_speed1", 1f);
-            this.audio_setting_test.clip = this.sex1Audio_setting_test;
-        }
     }
 
-    public void set_sex_setting(int intsex)
-    {
-        this.btn_sel_sex[0].color = this.color_sel_nomal;
-        this.btn_sel_sex[1].color = this.color_sel_nomal;
-        this.val_setting_sex = intsex;
-        this.inputField_character_name.text = this.get_name_char(intsex);
-        if (intsex == 0)
-        {
-            this.btn_sel_sex[1].color = this.color_sel_select;
-            this.slider_setting_voice_speed.value = PlayerPrefs.GetFloat("voice_speed0", 1.2f);
-            this.audio_setting_test.clip = this.sex0Audio_setting_test;
-        }
-        else
-        {
-            this.btn_sel_sex[0].color = this.color_sel_select;
-            this.slider_setting_voice_speed.value = PlayerPrefs.GetFloat("voice_speed1", 1f);
-            this.audio_setting_test.clip = this.sex1Audio_setting_test;
-        }
-    }
 
     public void reset_count_next()
     {
@@ -831,61 +620,13 @@ public class mygirl : MonoBehaviour
         this.GetComponent<Music_offline>().delete_all();
         this.carrot.get_tool().delete_file("bk.png");
         this.set_skybox_Texture(this.bk_default);
-        this.panel_setting.SetActive(false);
         this.load_app_online();
     }
 
-    public void btn_menu()
+    public void Btn_show_setting()
     {
-        this.val_setting_color_chat = this.setting_color_chat;
-        this.val_setting_effect_chat = this.setting_effect_chat;
-        this.setting_img_icon_lang.sprite = this.icon_lang.sprite;
-        this.setting_txt_name_lang.text = PlayerPrefs.GetString("lang_name", "English");
-        if (this.audio_setting_test.clip != null)
-        {
-            this.audio_setting_test.Stop();
-            this.audio_setting_test.clip = null;
-        }
         this.Magic_tocuh.SetActive(false);
-        this.panel_setting.SetActive(true);
-        this.slider_setting_limit_chat.value = PlayerPrefs.GetInt("limit_chat", 4);
-
-        this.load_audio_voice_test_setting();
-        this.check_limit_chat();
-        this.set_sex_setting(this.sex);
-        this.check_setting_on_off_effect_chat();
-        this.check_setting_on_off_color_chat();
-    }
-
-    public void load_audio_voice_test_setting()
-    {
-        string str_audio_0 = PlayerPrefs.GetString("setting_url_sound_test_sex0");
-        string str_audio_1 = PlayerPrefs.GetString("setting_url_sound_test_sex1");
-        if (str_audio_0 != "") StartCoroutine(downloadAudio_setting(str_audio_0, 0));
-        if (str_audio_1 != "") StartCoroutine(downloadAudio_setting(str_audio_1, 1));
-    }
-
-    public void btn_done_setting()
-    {
-        this.id_question = "";
-        this.type_question = "";
-        this.sex = this.val_setting_sex;
-        PlayerPrefs.SetInt("sex", this.val_setting_sex);
-        PlayerPrefs.SetInt("setting_effect_chat", this.val_setting_effect_chat);
-        PlayerPrefs.SetInt("setting_color_chat", this.val_setting_color_chat);
-
-        if (this.val_setting_sex == 0)
-            PlayerPrefs.SetFloat("voice_speed0", this.slider_setting_voice_speed.value);
-        else
-            PlayerPrefs.SetFloat("voice_speed1", this.slider_setting_voice_speed.value);
-
-        PlayerPrefs.SetInt("limit_chat", (int)this.slider_setting_limit_chat.value);
-        this.person.load_status(this.val_setting_sex);
-        this.set_name_char(this.inputField_character_name.text, this.sex);
-        this.load_msg_start("");
-        this.panel_msg_menu.SetActive(false);
-        this.panel_msg_func.SetActive(false);
-        this.panel_setting.SetActive(false);
+        carrot.Create_Setting();
     }
 
     public void show_panel_learn(bool is_show)
@@ -898,9 +639,6 @@ public class mygirl : MonoBehaviour
         {
             this.Magic_tocuh.SetActive(true);
         }
-        this.panel_learn.GetComponent<Panel_learn>().btn_done.SetActive(is_show);
-        this.panel_learn.SetActive(is_show);
-        this.panel_learn.GetComponent<Panel_learn>().set_question_show("", "", "");
     }
 
 
@@ -957,21 +695,6 @@ public class mygirl : MonoBehaviour
         this.carrot.show_share();
     }
 
-    public void check_limit_chat()
-    {
-        int limit_chat = (int)slider_setting_limit_chat.value;
-        this.txt_setting_limit_chat_tip.text = PlayerPrefs.GetString("limit_chat_" + limit_chat, "limit_chat_" + limit_chat);
-    }
-
-    public void setting_play_audio_test()
-    {
-        if (this.audio_setting_test.clip != null)
-        {
-            this.audio_setting_test.Play();
-        }
-        this.audio_setting_test.pitch = this.slider_setting_voice_speed.value;
-    }
-
     public void set_skybox_Texture(Texture textT)
     {
         this.panel_msg_func.SetActive(false);
@@ -986,7 +709,6 @@ public class mygirl : MonoBehaviour
         this.bk.material = result;
     }
 
-
     public void play_music_and_dance(bool is_player)
     {
         if (is_player)
@@ -1000,7 +722,6 @@ public class mygirl : MonoBehaviour
         if (is_bool == false)
         {
             this.load_background();
-            this.panel_btn_music_emotions.SetActive(false);
         }
 
         if (is_bool == true)
@@ -1008,7 +729,6 @@ public class mygirl : MonoBehaviour
             if (this.panel_music.is_offline == true && this.panel_music.is_radio == false)
             {
                 this.panel_btn_main.SetActive(false);
-                this.panel_btn_music_emotions.GetComponent<Panel_select_music_emotions>().show(this.panel_music.id_chat_music);
             }
         }
     }
@@ -1054,18 +774,11 @@ public class mygirl : MonoBehaviour
     public void show_learn_question()
     {
         this.Magic_tocuh.SetActive(false);
-        this.panel_learn.gameObject.SetActive(true);
-        this.panel_learn.GetComponent<Panel_learn>().set_question_show(this.txt_girl_chat.text, this.id_question, this.type_question);
-        this.panel_learn.GetComponent<Panel_learn>().btn_done.SetActive(true);
         this.panel_msg_menu.SetActive(false);
     }
     public void show_learn_question_customer(string msg_chat)
     {
         this.Magic_tocuh.SetActive(false);
-        this.panel_learn.gameObject.SetActive(true);
-        this.panel_learn.GetComponent<Panel_learn>().set_question_show("", "", "");
-        this.panel_learn.GetComponent<Panel_learn>().inp_question.text = msg_chat;
-        this.panel_learn.GetComponent<Panel_learn>().btn_done.SetActive(true);
         this.panel_msg_menu.SetActive(false);
     }
 
@@ -1088,25 +801,7 @@ public class mygirl : MonoBehaviour
 
     public void show_report(bool is_show)
     {
-        if (is_show)
-        {
-            this.Magic_tocuh.SetActive(false);
-            this.panel_report.SetActive(true);
-            if (this.str_effect == "2")
-            {
-                this.panel_report.GetComponent<Panel_report>().set_view(this.txt_girl_chat.text, true, this.id_question, this.type_question);
-            }
-            else
-            {
-                this.panel_report.GetComponent<Panel_report>().set_view(this.txt_girl_chat.text, false, this.id_question, this.type_question);
-            }
-            this.panel_msg_menu.SetActive(false);
-        }
-        else
-        {
-            this.Magic_tocuh.SetActive(true);
-            this.panel_report.GetComponent<Panel_report>().hide_report();
-        }
+
     }
 
     public void show_chat_by_id(string id)
@@ -1149,7 +844,6 @@ public class mygirl : MonoBehaviour
         {
             this.panel_btn_main.SetActive(false);
             this.panel_msg_menu.SetActive(true);
-            this.panel_btn_music_emotions.SetActive(false);
             this.button_login_in_home.SetActive(false);
         }
         else
@@ -1157,7 +851,6 @@ public class mygirl : MonoBehaviour
             this.panel_btn_main.SetActive(true);
             this.panel_msg_menu.SetActive(false);
             if(this.carrot.is_online())this.button_login_in_home.SetActive(true);
-            GameObject.Find("mygirl").GetComponent<Sub_menu>().close();
         }
     }
 
@@ -1207,19 +900,6 @@ public class mygirl : MonoBehaviour
     public void show_list_sel_lang()
     {
         this.show_magic_touch(false);
-        if (this.panel_setting.activeInHierarchy == true)
-            this.carrot.show_list_lang(check_name_for_setting);
-        else
-            this.carrot.show_list_lang(this.load_msg_start);
-    }
-
-    private void check_name_for_setting(string s_data)
-    {
-        this.setting_txt_name_lang.text = PlayerPrefs.GetString("lang_name", "English");
-        if (this.val_setting_sex == 0)
-            this.inputField_character_name.text = PlayerPrefs.GetString("name_sex_0", PlayerPrefs.GetString("name_char_girl", "Thi"));
-        else
-            this.inputField_character_name.text = PlayerPrefs.GetString("name_sex_1", PlayerPrefs.GetString("name_char_boy", "Thắng"));
     }
 
     private string get_name_char(int char_sex)
@@ -1250,83 +930,4 @@ public class mygirl : MonoBehaviour
         }
     }
 
-    public void setting_on_off_effect_chat()
-    {
-        if (this.val_setting_effect_chat == 0)
-            this.val_setting_effect_chat = 1;
-        else
-            this.val_setting_effect_chat = 0;
-
-        this.check_setting_on_off_effect_chat();
-    }
-
-    private void check_setting_on_off_effect_chat()
-    {
-        this.icon_setting_effect.sprite = this.icon_on_off[this.val_setting_effect_chat];
-        this.txt_setting_effect.text = PlayerPrefs.GetString("setting_effect_chat_" + this.val_setting_effect_chat, "Off chat effect");
-    }
-
-    public void setting_on_off_color_chat()
-    {
-        if (this.val_setting_color_chat == 0)
-        {
-            this.val_setting_color_chat = 1;
-        }
-        else
-        {
-            this.val_setting_color_chat = 0;
-        }
-        this.check_setting_on_off_color_chat();
-    }
-
-    private void check_setting_on_off_color_chat()
-    {
-        this.icon_setting_color_chat.sprite = this.icon_on_off[this.val_setting_color_chat];
-        this.txt_setting_color_chat.text = PlayerPrefs.GetString("setting_color_chat_" + this.val_setting_color_chat, "Off chat effect");
-    }
-
-    public void buy_success(Product product)
-    {
-        this.onBuySuccessPayCarrot(product.definition.id);
-    }
-
-    private void onBuySuccessPayCarrot(string s_id_prorudct)
-    {
-        if(s_id_prorudct==this.carrot.shop.get_id_by_index(0))
-        {
-            this.carrot.Show_msg(carrot.L("remove_ads", "remove_ads"), carrot.L("buy_success", "buy_success"), Carrot.Msg_Icon.Success);
-            this.act_inapp_removeAds();
-        }
-
-        if (s_id_prorudct == this.carrot.shop.get_id_by_index(1))
-        {
-            this.carrot.Show_msg(carrot.L("shop", "Shop"),carrot.L("buy_success", "buy_success"), Carrot.Msg_Icon.Success);
-            this.panel_music.act_download_mp3();
-        }
-    }
-
-    private void onRestoreSuccessPayCarrot(string[] arr_id)
-    {
-        for(int i = 0; i < arr_id.Length; i++)
-        {
-            string s_id_prorudct = arr_id[i];
-            if (s_id_prorudct == this.carrot.shop.get_id_by_index(0)) this.act_inapp_removeAds();
-        }
-    }
-
-    private void act_inapp_removeAds()
-    {
-        PlayerPrefs.SetInt("is_buy_ads", 1);
-        this.panel_setting_removeAds.SetActive(false);
-    }
-
-    public void restore_product()
-    {
-        this.carrot.shop.restore_product();
-    }
-
-    public void buy_product(int index_p)
-    {
-        this.carrot.shop.buy_product(index_p);
-    }
 }

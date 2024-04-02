@@ -7,14 +7,12 @@ public class Recording_comand : MonoBehaviour {
 	public Text txt_status_2;
 
 	public Text txt_status_maximize;
-	public Text txt_status_2_maximize;
 
 	public Image img_btn_voice;
 	public Image img_btn_voice_maximize;
 
 	public Image img_btn_auto;
 	public GameObject panel_voice;
-	public GameObject panel_voice_maximize;
 	public Color32 color_start;
 
 	public bool auto_chat=false;
@@ -25,8 +23,6 @@ public class Recording_comand : MonoBehaviour {
 
 	void Start () {
 		this.panel_voice.SetActive (false);
-		this.panel_voice_maximize.SetActive (false);
-		txt_status_2_maximize.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
 		txt_status_2.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
 	}
 	
@@ -47,10 +43,6 @@ public class Recording_comand : MonoBehaviour {
 			this.GetComponent<mygirl> ().play_s ();
 			txt_status.color = Color.yellow;
 		}
-
-        if (this.GetComponent<mygirl>().panel_report.activeInHierarchy == false && this.GetComponent<mygirl>().panel_learn.activeInHierarchy == false)
-        {
-            this.GetComponent<mygirl>().play_s();        }
 
         this.GetComponent<mygirl> ().speech.mute = false;
 		this.GetComponent<mygirl> ().speech.volume = 1f;
@@ -95,12 +87,6 @@ public class Recording_comand : MonoBehaviour {
 
 	public void OnEndOfSpeech() {
 		this.img_btn_voice.color = Color.white;
-		if (this.is_maximize) {
-			txt_status_2_maximize.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
-		} else {
-			txt_status_2.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
-
-		}
 		Microphone.End(null);
 		this.GetComponent<mygirl> ().speech.mute = false;
 		this.GetComponent<mygirl> ().speech.volume = 1f;
@@ -110,7 +96,6 @@ public class Recording_comand : MonoBehaviour {
 		Debug.LogError(error);
 		if (this.is_maximize) {
 			txt_status_maximize.text = PlayerPrefs.GetString ("voice_error", "Something went wrong... Try again!");
-			txt_status_2_maximize.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
 			this.img_btn_voice_maximize.color = Color.white;
 		} else {
 			txt_status.text = PlayerPrefs.GetString ("voice_error", "Something went wrong... Try again!");

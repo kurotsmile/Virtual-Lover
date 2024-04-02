@@ -50,7 +50,6 @@ public class Person : MonoBehaviour {
 				this.index_img = -1;
 			}
 		}
-
 	}
 
 	public void set_status(string status_s){
@@ -72,8 +71,6 @@ public class Person : MonoBehaviour {
 		}
 		this.spRender.sprite = this.sprite_anim [this.index_img];
 	}
-
-
 
 	public void download_data(string data){
 		IDictionary data_status= (IDictionary) Carrot.Json.Deserialize(data);
