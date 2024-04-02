@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using KKSpeech;
-using UnityEngine.Advertisements;
 using UnityEngine.Networking;
 using UnityEngine.Purchasing;
 using Carrot;
@@ -171,32 +170,8 @@ public class mygirl : MonoBehaviour
         }
     }
 
-    private void load_ads()
-    {
-        if (PlayerPrefs.GetInt("is_buy_ads", 0) == 0)
-        {
-            if (Advertisement.isSupported&&Advertisement.isInitialized==false) Advertisement.Initialize(gameId);
-            this.panel_setting_removeAds.SetActive(true);
-            if (this.carrot.is_online())
-            {
-                this.button_removeads_box_msg.SetActive(true);
-                this.button_viewads_box_msg.SetActive(true);
-            }
-        }
-        else
-        {
-            this.panel_setting_removeAds.SetActive(false);
-            if (this.carrot.is_online())
-            {
-                this.button_removeads_box_msg.SetActive(false);
-                this.button_viewads_box_msg.SetActive(false);
-            }
-        }
-    }
-
     public void load_app_online()
     {
-        this.load_ads();
         if (PlayerPrefs.GetString("lang") == "")
         {
             this.no_magic_touch();
@@ -225,15 +200,22 @@ public class mygirl : MonoBehaviour
     private void no_magic_touch() { this.show_magic_touch(false);}
 
 
-    public void load_msg_start(string s_data)
+    private void load_msg_start(string s_data)
     {
-        if (SpeechRecognizer.ExistsOnDevice())
-        {
-            SpeechRecognizer.SetDetectionLanguage(PlayerPrefs.GetString("key_voice", "en-US"));
-            SpeechRecognizer.RequestAccess();
-            SpeechRecognizer.SetDetectionLanguage(PlayerPrefs.GetString("key_voice", "en-US"));
-        }
+        StructuredQuery q = new StructuredQuery("chat-" + carrot.lang.Get_key_lang());
+        q.Add_where("key", Query_OP.EQUAL,"hi-"+DateTime.Now.Hour);
+        q.Set_limit(1);
+        carrot.server.Get_doc(q.ToJson(),Act_msg_hi_done);
+    }
 
+    private void Act_msg_hi_done(string s_data)
+    {
+        Fire_Collection fc = new(s_data);
+        if (!fc.is_null)
+        {
+            IDictionary data_chat = fc.fire_document[0].Get_IDictionary();
+            Debug.Log(data_chat["msg"].ToString());
+        }
     }
 
     public WWWForm frm_action(string str_func)
@@ -266,12 +248,7 @@ public class mygirl : MonoBehaviour
 
     public void show_ads()
     {
-#if UNITY_STANDALONE
-        this.no_magic_touch();
         this.carrot.ads.show_ads_Interstitial();
-#else
-        Advertisement.Show();
-#endif
     }
 
     public void act_hit()
