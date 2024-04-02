@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using KKSpeech;
 using UnityEngine.Networking;
 using UnityEngine.Purchasing;
 using Carrot;
@@ -160,7 +159,6 @@ public class mygirl : MonoBehaviour
         }
         else if (this.panel_recoding.panel_voice_maximize.activeInHierarchy)
         {
-            this.panel_recoding.stop_recoding();
             this.carrot.set_no_check_exit_app();
         }
         else if (this.panel_msg_menu.activeInHierarchy)
@@ -298,10 +296,9 @@ public class mygirl : MonoBehaviour
             {
                 if (this.panel_recoding.panel_voice.activeInHierarchy)
                 {
-                    if (this.speech.isPlaying == false && this.panel_recoding.auto_chat == true && SpeechRecognizer.IsRecording() == false && this.is_waiting_voice == true)
+                    if (this.speech.isPlaying == false && this.panel_recoding.auto_chat == true && this.is_waiting_voice == true)
                     {
                         this.is_waiting_voice = false;
-                        this.panel_recoding.play_recoding();
                     }
                 }
             }

@@ -210,12 +210,12 @@ public class Panel_learn : MonoBehaviour {
 
 
 	public void voice_conmand_question(){
-		GameObject.Find ("mygirl").GetComponent<Recording_comand> ().start_recoding_maximize (this.inp_question);
+
 	}
 
 	public void voice_command_answer()
 	{
-		GameObject.Find("mygirl").GetComponent<Recording_comand>().start_recoding_maximize(this.inp_answer);
+
 	}
 
 

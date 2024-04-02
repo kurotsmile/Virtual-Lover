@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using KKSpeech;
 using UnityEngine.Android;
 
 public class Recording_comand : MonoBehaviour {
@@ -27,23 +24,6 @@ public class Recording_comand : MonoBehaviour {
 	private InputField obj_inp = null;
 
 	void Start () {
-		if (SpeechRecognizer.ExistsOnDevice()) {
-			SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
-			listener.onAuthorizationStatusFetched.AddListener(OnAuthorizationStatusFetched);
-			listener.onAvailabilityChanged.AddListener(OnAvailabilityChange);
-			listener.onErrorDuringRecording.AddListener(OnError);
-			listener.onErrorOnStartRecording.AddListener(OnError);
-			listener.onFinalResults.AddListener(OnFinalResult);
-			listener.onPartialResults.AddListener(OnPartialResult);
-			listener.onEndOfSpeech.AddListener(OnEndOfSpeech);
-			SpeechRecognizer.SetDetectionLanguage (PlayerPrefs.GetString("key_voice","en-US"));
-			SpeechRecognizer.RequestAccess();
-			SpeechRecognizer.SetDetectionLanguage (PlayerPrefs.GetString("key_voice","en-US"));
-		} else {
-			txt_status.text =PlayerPrefs.GetString ("voice_not_suport", "Sorry, but this device doesn't support speech recognition");
-			txt_status_maximize.text=PlayerPrefs.GetString ("voice_not_suport", "Sorry, but this device doesn't support speech recognition");
-		}
-
 		this.panel_voice.SetActive (false);
 		this.panel_voice_maximize.SetActive (false);
 		txt_status_2_maximize.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
@@ -70,9 +50,7 @@ public class Recording_comand : MonoBehaviour {
 
         if (this.GetComponent<mygirl>().panel_report.activeInHierarchy == false && this.GetComponent<mygirl>().panel_learn.activeInHierarchy == false)
         {
-            this.GetComponent<mygirl>().play_s();
-            this.stop_recoding();
-        }
+            this.GetComponent<mygirl>().play_s();        }
 
         this.GetComponent<mygirl> ().speech.mute = false;
 		this.GetComponent<mygirl> ().speech.volume = 1f;
@@ -115,27 +93,6 @@ public class Recording_comand : MonoBehaviour {
 		this.GetComponent<mygirl> ().speech.volume = 1f;
 	}
 
-	public void OnAuthorizationStatusFetched(AuthorizationStatus status) {
-		switch (status) {
-		case AuthorizationStatus.Authorized:
-			break;
-		default:
-			if (this.is_maximize) {
-				txt_status.text = PlayerPrefs.GetString ("voice_not_rote", "Cannot use Speech Recognition, authorization status is ") + status;
-			} else {
-				txt_status_maximize.text = PlayerPrefs.GetString ("voice_not_rote", "Cannot use Speech Recognition, authorization status is ") + status;
-			}
-			break;
-		}
-		if (this.is_maximize) {
-			this.img_btn_voice_maximize.color = Color.white;
-		} else {
-			this.img_btn_voice.color = Color.white;
-		}
-		this.GetComponent<mygirl> ().speech.mute = false;
-		this.GetComponent<mygirl> ().speech.volume = 1f;
-	}
-
 	public void OnEndOfSpeech() {
 		this.img_btn_voice.color = Color.white;
 		if (this.is_maximize) {
@@ -166,83 +123,6 @@ public class Recording_comand : MonoBehaviour {
 	}
 
 
-	public void start_recoding(){
-        if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
-        {
-            Permission.RequestUserPermission(Permission.Microphone);
-        }
-
-        if (SpeechRecognizer.IsRecording()) {
-			SpeechRecognizer.StopIfRecording();
-			if (this.is_maximize) {
-				txt_status_2_maximize.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
-				this.img_btn_voice.color = Color.white;
-			} else {
-				txt_status_2.text = PlayerPrefs.GetString ("voice_start", "Start Recording");
-				this.img_btn_voice.color = Color.white;
-			}
-
-			this.GetComponent<mygirl> ().speech.mute = false;
-			this.GetComponent<mygirl> ().speech.volume = 1f;
-		} else {
-			this.play_recoding ();
-		}
-		if (this.is_maximize) {
-			this.panel_voice_maximize.SetActive (true);
-		} else {
-			this.panel_voice.SetActive (true);
-		}
-	}
-
-	public void start_recoding_minimax ()
-	{
-		
-		this.is_maximize = false;
-		this.start_recoding ();
-	}
-
-	public void start_recoding_maximize(InputField inp_voice_command){
-		this.obj_inp = inp_voice_command;
-		this.is_maximize = true;
-		this.start_recoding ();
-        if (this.GetComponent<mygirl>().panel_report.activeInHierarchy == false && this.GetComponent<mygirl>().panel_learn.activeInHierarchy == false)
-        {
-            this.GetComponent<mygirl>().Magic_tocuh.SetActive(false);
-        }
-    }
-
-
-	public void stop_recoding(){
-		SpeechRecognizer.StopIfRecording();
-		if (this.is_maximize) {
-			this.img_btn_voice_maximize.color = Color.white;
-			this.panel_voice_maximize.SetActive (false);
-		} else {
-			this.img_btn_voice.color = Color.white;
-			this.panel_voice.SetActive (false);
-		}
-		this.GetComponent<mygirl> ().speech.mute = false;
-		this.GetComponent<mygirl> ().speech.volume = 1f;
-        if (this.GetComponent<mygirl>().panel_report.activeInHierarchy == false && this.GetComponent<mygirl>().panel_learn.activeInHierarchy == false)
-        {
-            this.GetComponent<mygirl>().Magic_tocuh.SetActive(true);
-        }
-    }
-
-	public void play_recoding(){
-		SpeechRecognizer.StartRecording(true);
-		if (this.is_maximize) {
-			this.img_btn_voice_maximize.color = Color.red;
-			txt_status_maximize.color = this.color_start;
-			txt_status_maximize.text = PlayerPrefs.GetString ("input_tip", "Say something :-)");
-		} else {
-			this.img_btn_voice.color = Color.red;
-			txt_status.color = this.color_start;
-			txt_status.text = PlayerPrefs.GetString ("voice_statu", "Say something :-)");
-		}
-		this.GetComponent<mygirl> ().speech.mute = true;                                                                                                                                                   
-	}
-		
 
 	public void btn_auto_chat(){
 		if (this.auto_chat) {

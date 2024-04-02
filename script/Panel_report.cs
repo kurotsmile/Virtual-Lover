@@ -146,10 +146,10 @@ public class Panel_report : MonoBehaviour {
 	}
 
 	public void btn_voice_command_report_1(){
-		GameObject.Find ("mygirl").GetComponent<Recording_comand> ().start_recoding_maximize (this.inp_value1);
+
 	}
 
 	public void btn_voice_command_report_other(){
-		GameObject.Find ("mygirl").GetComponent<Recording_comand> ().start_recoding_maximize (this.inp_value);
+
 	}
 }
