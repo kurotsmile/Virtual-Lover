@@ -14,6 +14,6 @@ public class prefab_brain_item : MonoBehaviour {
 
 	public void play(){
 		GameObject.Find ("mygirl").GetComponent<mygirl> ().chat_offline (this.index);
-		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.hide_box();
+		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.close_all_window();
 	}
 }

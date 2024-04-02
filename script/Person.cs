@@ -107,8 +107,6 @@ public class Person : MonoBehaviour {
 			Debug.Log (data_status4 [i].ToString ()+" status 4");
 			StartCoroutine(this.download_status(arr_sp_statu4,i,data_status4 [i].ToString ()));
 		}
-		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.slider_loading.maxValue = 17;
-		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_loading_with_process_bar();
 		StartCoroutine(this.download_status(arrSp_coppyright,0,data_status["copyright"].ToString()));
 	}
 
@@ -127,7 +125,6 @@ public class Person : MonoBehaviour {
 			Texture2D profilePicRequest = ((DownloadHandlerTexture)www.downloadHandler).texture;
 			arrSp[indexID] = Sprite.Create(profilePicRequest, new Rect(0.0f, 0.0f, profilePicRequest.width, profilePicRequest.height), new Vector2(0.5f, 0.5f), 100.0f);
 			this.count_file++;
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.slider_loading.value = this.count_file;
 			if (this.count_file >= 17)
 			{
 				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.hide_loading();

@@ -347,7 +347,7 @@ public class Panel_music_player : MonoBehaviour {
 			GameObject.Find ("mygirl").GetComponent<Music_offline> ().next_music ();
 		} else {
 			WWWForm frm_chat = GameObject.Find("mygirl").GetComponent<mygirl> ().frm_action ("next_music");
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm_chat, GameObject.Find("mygirl").GetComponent<mygirl>().act_chat_girl);
+			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm_chat, GameObject.Find("mygirl").GetComponent<mygirl>().act_chat_girl);
 		}
 	}
 
@@ -372,14 +372,14 @@ public class Panel_music_player : MonoBehaviour {
 			this.pic_sound_3d.color = Color.yellow;
 			this.soud_player_music.GetComponent<Animator> ().enabled = true;
 			this.point_effect_sound3d.SetActive (true);
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("list_music","list_music"),PlayerPrefs.GetString("list_music_3d_sound","list_music_3d_sound"), Carrot.Msg_Icon.Alert);
+			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("list_music","list_music"),PlayerPrefs.GetString("list_music_3d_sound","list_music_3d_sound"), Carrot.Msg_Icon.Alert);
 		}
 	}
 
 	public void save_music_offline(){
 		if (GameObject.Find ("mygirl").GetComponent<Music_offline> ().add_music (this.url_id, this.txt_name_player.text,this.data_music,ToHex(this.waveformColor),this.data_lyric,this.data_link_video,this.data_s_artist,this.data_s_genre,this.data_s_album,this.data_s_year)) {
 			this.btn_download.SetActive (false);
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("list_music","list_music"),PlayerPrefs.GetString("ms_add_success","ms_add_success"),Carrot.Msg_Icon.Success);
+			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("list_music","list_music"),PlayerPrefs.GetString("ms_add_success","ms_add_success"),Carrot.Msg_Icon.Success);
 			GameObject.Find ("mygirl").GetComponent<Music_offline> ().check ();
 		}
 
@@ -428,7 +428,7 @@ public class Panel_music_player : MonoBehaviour {
 	{
 		if (!info.Contains("Station is already playing!"))
 		{
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("radio", "Radio"), PlayerPrefs.GetString("radio_error", "This radio channel is currently inactive, please try again another time. Now choose another radio station to listen to!"), Carrot.Msg_Icon.Alert);
+			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("radio", "Radio"), PlayerPrefs.GetString("radio_error", "This radio channel is currently inactive, please try again another time. Now choose another radio station to listen to!"), Carrot.Msg_Icon.Alert);
 			this.btn_delete_music();
 		}
 	}
@@ -447,7 +447,7 @@ public class Panel_music_player : MonoBehaviour {
 
 	public void show_share_music()
     {
-		string url_share_mp3 = GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_url_host()+ "/music/"+this.id_chat_music+"/"+this.lang_music;
+		string url_share_mp3 = GameObject.Find("mygirl").GetComponent<mygirl>().carrot.mainhost+ "/music/"+this.id_chat_music+"/"+this.lang_music;
 		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_share(url_share_mp3, this.txt_name_player.text);
 	}
 
@@ -458,7 +458,7 @@ public class Panel_music_player : MonoBehaviour {
 
 	public void act_download_mp3()
     {
-		string url_download=GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_url_host() + "/app_mygirl/app_my_girl_"+this.lang_music+"/"+this.id_chat_music+".mp3";
+		string url_download=GameObject.Find("mygirl").GetComponent<mygirl>().carrot.mainhost + "/app_mygirl/app_my_girl_"+this.lang_music+"/"+this.id_chat_music+".mp3";
 		Application.OpenURL(url_download);
     }
 

@@ -1,12 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System;
-using UnityEngine.Networking;
 
 public class Panel_learn : MonoBehaviour {
+
+	[Header("Main Obj")]
+	public mygirl app;
+
+	[Header("Learn Obj")]
 	public Text question_show_Text;
 	public InputField inp_question;
 	public InputField inp_answer;
@@ -59,7 +61,7 @@ public class Panel_learn : MonoBehaviour {
 	}
 
 	public void delete_question(){
-		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("learn","learn"),PlayerPrefs.GetString("learn_delete_question","learn_delete_question"),Carrot.Msg_Icon.Alert);
+		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("learn","learn"),PlayerPrefs.GetString("learn_delete_question","learn_delete_question"),Carrot.Msg_Icon.Alert);
 		this.panel_question_show.SetActive (false);
 		this.id_question = "";
 		this.type_question = "";
@@ -85,7 +87,7 @@ public class Panel_learn : MonoBehaviour {
 				frm.AddField("character", PlayerPrefs.GetInt("sel_nv", 0).ToString());
 				frm.AddField("id_question", this.id_question);
 				frm.AddField("type_question", this.type_question);
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send_hide(frm, this.act_submit_data);
+				//app.carrot.send_hide(frm, this.act_submit_data);
 				this.btn_done.SetActive (false);
 			} else {
 				this.done_learn_and_close ();

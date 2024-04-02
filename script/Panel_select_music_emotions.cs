@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -7,6 +6,10 @@ using UnityEngine.Networking;
 //Tham so sever ["kiem tra da chon (-1 la khong co,0-3 la chi so chon)","tham so vui ve","chi so buon","chi so thu gian","chi so phan khich"]
 
 public class Panel_select_music_emotions : MonoBehaviour {
+	[Header("Obj Main")]
+	public mygirl app;
+
+	[Header("Obj Emotion")]
 	public Color32 color_nomal;
 	public Color32 color_sel;
 
@@ -30,11 +33,11 @@ public class Panel_select_music_emotions : MonoBehaviour {
 
 
 	IEnumerator set_emotion_music(int index_emotions){
-		WWWForm frm = GameObject.Find ("mygirl").GetComponent<mygirl> ().frm_action ("music_emotion");
+		WWWForm frm =app.frm_action ("music_emotion");
 		frm.AddField ("id_music", this.id_music);
 		frm.AddField ("sel_emotion",index_emotions);
 		frm.AddField ("sub_func","set");
-		using (UnityWebRequest www = UnityWebRequest.Post(GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_url(), frm))
+		using (UnityWebRequest www = UnityWebRequest.Post(app.carrot.mainhost, frm))
 		{
 			yield return www.SendWebRequest();
 
@@ -43,7 +46,7 @@ public class Panel_select_music_emotions : MonoBehaviour {
 				IList arr_data = (IList)Carrot.Json.Deserialize(www.downloadHandler.text);
 				this.check_show_list(arr_data);
 				this.sel_item_emotion(int.Parse(arr_data[0].ToString()));
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("list_music", "list_music"), PlayerPrefs.GetString("music_emotions_msg", "music_emotions_msg"),Carrot.Msg_Icon.Alert);
+				app.carrot.Show_msg(PlayerPrefs.GetString("list_music", "list_music"), PlayerPrefs.GetString("music_emotions_msg", "music_emotions_msg"),Carrot.Msg_Icon.Alert);
             }
             else
             {
@@ -57,7 +60,7 @@ public class Panel_select_music_emotions : MonoBehaviour {
 		frm.AddField ("id_music",id_music);
 		frm.AddField ("sub_func","get");
 
-		using (UnityWebRequest www = UnityWebRequest.Post(GameObject.Find("mygirl").GetComponent<mygirl>().carrot.get_url(), frm))
+		using (UnityWebRequest www = UnityWebRequest.Post(app.carrot.mainhost, frm))
 		{
 			yield return www.SendWebRequest();
 

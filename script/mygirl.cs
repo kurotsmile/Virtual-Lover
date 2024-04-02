@@ -1,14 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using UnityEngine.SceneManagement;
-using System.IO;
 using KKSpeech;
 using UnityEngine.Advertisements;
 using UnityEngine.Networking;
 using UnityEngine.Purchasing;
+using Carrot;
 
 public class mygirl : MonoBehaviour
 {
@@ -235,13 +233,12 @@ public class mygirl : MonoBehaviour
             SpeechRecognizer.RequestAccess();
             SpeechRecognizer.SetDetectionLanguage(PlayerPrefs.GetString("key_voice", "en-US"));
         }
-        WWWForm frm_chat = this.frm_action("chao");
-        this.carrot.send(frm_chat, act_chat_girl);
+
     }
 
     public WWWForm frm_action(string str_func)
     {
-        WWWForm frm_chat = this.carrot.frm_act(str_func);
+        WWWForm frm_chat =new WWWForm();
         frm_chat.AddField("id_question", this.id_question);
         frm_chat.AddField("type_question", this.type_question);
         frm_chat.AddField("sex", PlayerPrefs.GetInt("sex", 0));
@@ -271,7 +268,7 @@ public class mygirl : MonoBehaviour
     {
 #if UNITY_STANDALONE
         this.no_magic_touch();
-        this.carrot.show_ads();
+        this.carrot.ads.show_ads_Interstitial();
 #else
         Advertisement.Show();
 #endif
@@ -281,7 +278,7 @@ public class mygirl : MonoBehaviour
     {
         this.count_time_next_chat = 0;
         WWWForm frm_chat = this.frm_action("hit");
-        this.carrot.send(frm_chat, act_chat_girl);
+        //this.carrot.send(frm_chat, act_chat_girl);
     }
 
     void Update()
@@ -293,7 +290,6 @@ public class mygirl : MonoBehaviour
             this.panel_msg_func.activeInHierarchy == false &&
             this.panel_report.activeInHierarchy == false &&
             this.panel_msg_menu.activeInHierarchy == false&&
-            this.carrot.Canvas_carrot.gameObject.activeInHierarchy==false&&
             this.carrot.is_online()
             )
         {
@@ -303,7 +299,7 @@ public class mygirl : MonoBehaviour
                 if (this.count_time_next_chat > 23f)
                 {
                     WWWForm frm_chat = this.frm_action("bat_chuyen");
-                    this.carrot.send(frm_chat,act_chat_girl);
+                    //this.carrot.send(frm_chat,act_chat_girl);
                     this.count_time_next_chat = 0f;
                     this.panel_chat_me.SetActive(false);
                 }
@@ -425,7 +421,7 @@ public class mygirl : MonoBehaviour
                         WWWForm frm_chat = this.frm_action("chat");
                         frm_chat.AddField("func_server", this.func_server);
                         frm_chat.AddField("text", this.inpText.text.ToLower());
-                        this.carrot.send(frm_chat, act_chat_girl);
+                       //this.carrot.send(frm_chat, act_chat_girl);
 
                         this.txt_chat_me.text = this.inpText.text;
                         this.panel_chat_me.SetActive(true);
@@ -500,9 +496,9 @@ public class mygirl : MonoBehaviour
 
         if (s_chat.Contains("{ten_user}"))
         {
-            if (this.carrot.get_id_user_login() != "")
+            if (this.carrot.user.get_id_user_login() != "")
             {
-                string s_name_user = "\""+this.carrot.get_data_user_login("name")+"\"";
+                string s_name_user = "\""+this.carrot.user.get_data_user_login("name")+"\"";
                 s_chat=s_chat.Replace("{ten_user}", s_name_user);
             }
             else
@@ -631,7 +627,7 @@ public class mygirl : MonoBehaviour
             effect_nv.transform.SetParent(this.area_effect.transform);
         }
         //camera
-        if (effect_str == "6")this.carrot.show_camera(null);
+        if (effect_str == "6")this.carrot.camera_pro.Show_camera();
         //snow
         if (effect_str == "7")
         {
@@ -859,9 +855,8 @@ public class mygirl : MonoBehaviour
     public void setting_reset_all_data()
     {
         this.GetComponent<Music_offline>().delete_all();
-        this.carrot.delete_file("bk.png");
+        this.carrot.get_tool().delete_file("bk.png");
         this.set_skybox_Texture(this.bk_default);
-        this.carrot.delete_all_data();
         this.panel_setting.SetActive(false);
         this.load_app_online();
     }
@@ -967,8 +962,8 @@ public class mygirl : MonoBehaviour
     public void show_panel_tip_chat()
     {
         this.Magic_tocuh.SetActive(false);
-        this.carrot.show_list_box(PlayerPrefs.GetString("tip_chat", "Tip chat"), this.GetComponent<Tip_chat>().icon);
-        this.GetComponent<Tip_chat>().show_list_tip(this.carrot.area_body_box);
+        Carrot_Box box=this.carrot.Create_Box(carrot.L("tip_chat", "Tip chat"), this.GetComponent<Tip_chat>().icon);
+        this.GetComponent<Tip_chat>().show_list_tip(box.area_all_item);
     }
 
     public void delete_brain_book(int index)
@@ -1145,7 +1140,7 @@ public class mygirl : MonoBehaviour
         this.show_btn_main(false);
         WWWForm frm_chat = this.frm_action("show_chat");
         frm_chat.AddField("id_chat", id);
-        this.carrot.send(frm_chat, this.act_chat_girl);
+        //this.carrot.send(frm_chat, this.act_chat_girl);
         this.panel_msg_func.GetComponent<Panel_msg_box_func>().btn_close();
     }
 
@@ -1155,7 +1150,7 @@ public class mygirl : MonoBehaviour
         WWWForm frm_chat = this.frm_action("show_chat");
         frm_chat.AddField("id_chat", id);
         frm_chat.AddField("lang_chat", lang);
-        this.carrot.send(frm_chat, this.act_chat_girl);
+        //this.carrot.send(frm_chat, this.act_chat_girl);
         this.panel_msg_func.GetComponent<Panel_msg_box_func>().btn_close();
     }
 
@@ -1194,7 +1189,7 @@ public class mygirl : MonoBehaviour
 
     public void show_user_info(string s_id, string s_lang)
     {
-        this.carrot.show_user_by_id(s_id, s_lang);
+        this.carrot.user.show_user_by_id(s_id, s_lang);
         this.show_btn_main(false);
     }
 
@@ -1325,13 +1320,13 @@ public class mygirl : MonoBehaviour
     {
         if(s_id_prorudct==this.carrot.shop.get_id_by_index(0))
         {
-            this.carrot.show_msg(PlayerPrefs.GetString("remove_ads", "remove_ads"), PlayerPrefs.GetString("buy_success", "buy_success"), Carrot.Msg_Icon.Success);
+            this.carrot.Show_msg(carrot.L("remove_ads", "remove_ads"), carrot.L("buy_success", "buy_success"), Carrot.Msg_Icon.Success);
             this.act_inapp_removeAds();
         }
 
         if (s_id_prorudct == this.carrot.shop.get_id_by_index(1))
         {
-            this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("buy_success", "buy_success"), Carrot.Msg_Icon.Success);
+            this.carrot.Show_msg(carrot.L("shop", "Shop"),carrot.L("buy_success", "buy_success"), Carrot.Msg_Icon.Success);
             this.panel_music.act_download_mp3();
         }
     }

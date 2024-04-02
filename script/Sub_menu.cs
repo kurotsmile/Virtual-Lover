@@ -60,9 +60,8 @@ public class Sub_menu : MonoBehaviour {
 		} else {
 			WWWForm frm=GameObject.Find ("mygirl").GetComponent<mygirl> ().frm_action (name_act_func_box);
 			frm.AddField (id_func_box, id);
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, GameObject.Find("mygirl").GetComponent<mygirl>().act_chat_girl);
+			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, GameObject.Find("mygirl").GetComponent<mygirl>().act_chat_girl);
 		}
-
 	}
 
 	public void act_sub_function_one_on_list(IList list_data){

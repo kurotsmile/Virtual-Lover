@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Panel_report : MonoBehaviour {
-	
+	[Header("obj Main")]
+	public mygirl app;
+
+	[Header("Obj Report")]
 	public Text question_show_Text;
 	public Text txt_limit;
 	public report_item[] report_type;
@@ -70,23 +70,23 @@ public class Panel_report : MonoBehaviour {
 
 		if (sel_type == 1)
 		{
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report", "Report"), PlayerPrefs.GetString("report_1_msg", "report_1_msg"), Carrot.Msg_Icon.Alert);
+			app.carrot.Show_msg(app.carrot.L("report", "Report"), app.carrot.L("report_1_msg", "report_1_msg"), Carrot.Msg_Icon.Alert);
 			this.report_edit.SetActive(true);
 		}
 
 		if (sel_type == 3)
 		{
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report", "Report"), PlayerPrefs.GetString("report_3_msg", "report_3_msg"), Carrot.Msg_Icon.Alert);
+			app.carrot.Show_msg(app.carrot.L("report", "Report"),app.carrot.L("report_3_msg", "report_3_msg"), Carrot.Msg_Icon.Alert);
 			this.report_limit.SetActive(true);
 		}
 
 		if (sel_type == 4)
 		{
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report", "Report"), PlayerPrefs.GetString("report_4_msg", "report_4_msg"), Carrot.Msg_Icon.Alert);
+			app.carrot.Show_msg(app.carrot.L("report", "Report"), app.carrot.L("report_4_msg", "report_4_msg"), Carrot.Msg_Icon.Alert);
 			this.report_other.SetActive(true);
 		}
 
-		if (sel_type == 5) GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report", "Report"), PlayerPrefs.GetString("report_5_msg", "report_5_msg"), Carrot.Msg_Icon.Alert);
+		if (sel_type == 5) app.carrot.Show_msg(app.carrot.L("report", "Report"),app.carrot.L("report_5_msg", "report_5_msg"), Carrot.Msg_Icon.Alert);
 
 	}
 
@@ -98,12 +98,12 @@ public class Panel_report : MonoBehaviour {
 
 	public void submit(){
 		if (sel_type == 0) {
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report","Report"), PlayerPrefs.GetString("report_null","report_null"),Carrot.Msg_Icon.Error);
+			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("report","Report"), PlayerPrefs.GetString("report_null","report_null"),Carrot.Msg_Icon.Error);
 		} else {
 			if (sel_type == 4 && this.inp_value.text.Length < 10) {
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report","Report"),PlayerPrefs.GetString("report_error","report_error"), Carrot.Msg_Icon.Error);
+				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("report","Report"),PlayerPrefs.GetString("report_error","report_error"), Carrot.Msg_Icon.Error);
 			} else {
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report","Report"),PlayerPrefs.GetString("report_success","report_success"), Carrot.Msg_Icon.Error);
+				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("report","Report"),PlayerPrefs.GetString("report_success","report_success"), Carrot.Msg_Icon.Error);
 				this.btn_done.SetActive (false);
 
 				WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("report");
@@ -121,14 +121,14 @@ public class Panel_report : MonoBehaviour {
 				frm.AddField("sel_report", this.sel_type.ToString());
 				frm.AddField("id_question", this.id_question);
 				frm.AddField("type_question", this.type_question);
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_submit_data_report);
+				//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_submit_data_report);
 			}
 		}
 	}
 
 	private void act_submit_data_report(string s_data){
-		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("report", "Report"), PlayerPrefs.GetString("report_success", "Thank you for the error message for the developer. The error message will be reviewed shortly!"), Carrot.Msg_Icon.Success);
-		GameObject.Find("mygirl").GetComponent<mygirl>().show_report(false);
+		app.carrot.Show_msg(app.carrot.L("report", "Report"), app.carrot.L("report_success", "Thank you for the error message for the developer. The error message will be reviewed shortly!"), Carrot.Msg_Icon.Success);
+		app.show_report(false);
 	}
 
 	public void hide_report(){

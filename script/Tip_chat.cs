@@ -48,7 +48,7 @@ public class Tip_chat : MonoBehaviour {
 	{
 		WWWForm frm=this.GetComponent<mygirl>().frm_action("chat_tip");
 		frm.AddField("text", s_chat);
-		this.GetComponent<mygirl>().carrot.send(frm, this.GetComponent<mygirl>().act_chat_girl);
+		//this.GetComponent<mygirl>().carrot.send(frm, this.GetComponent<mygirl>().act_chat_girl);
 		this.GetComponent<mygirl>().carrot.close();
 	}
 }

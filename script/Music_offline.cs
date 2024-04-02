@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using Carrot;
 
 public class Music_offline : MonoBehaviour {
+	[Header("Obj Main")]
+	public mygirl app;
 
-
+	[Header("obj Music Offline")]
 	private int length;
 	public GameObject icon_music;
 	public GameObject icon_music_menu;
@@ -34,11 +35,10 @@ public class Music_offline : MonoBehaviour {
 	{
 		if (this.length>0) {
 			if (check_song_is_exit(id_song)) {
-				this.GetComponent<mygirl>().carrot.show_msg(PlayerPrefs.GetString("list_music","list_music"),PlayerPrefs.GetString("ms_error_null","ms_error_null"),Carrot.Msg_Icon.Error);
+				this.app.carrot.Show_msg(app.carrot.L("list_music","list_music"),app.carrot.L("ms_error_null","ms_error_null"),Carrot.Msg_Icon.Error);
 				return false;
 			}
 		}
-			
 		PlayerPrefs.SetString ("ms_id" + this.length, id_song);
 		PlayerPrefs.SetString ("ms_name" + this.length, name_song);
 		PlayerPrefs.SetString ("ms_file" + this.length, "m"+this.length+".data");;
@@ -76,10 +76,10 @@ public class Music_offline : MonoBehaviour {
 	}
 
 	public void show_list_music_offline(){
-		this.GetComponent<mygirl>().carrot.show_list_box(PlayerPrefs.GetString("list_music_offline", "Playlist offline"), this.icon);
+		Carrot_Box box=this.app.carrot.Create_Box(app.carrot.L("list_music_offline", "Playlist offline"), this.icon);
 		for (int i = 0; i < this.length; i++) {
 			GameObject brain_item = Instantiate (this.prefab_item);
-			brain_item.transform.SetParent (this.GetComponent<mygirl>().carrot.area_body_box);
+			brain_item.transform.SetParent (box.area_all_item);
 			brain_item.transform.localPosition = new Vector3 (brain_item.transform.localPosition.x, brain_item.transform.localPosition.y, 0f);
 			brain_item.transform.localScale = new Vector3 (1f, 1f,1f);
 			brain_item.GetComponent<Panel_music_offline_item> ().index = i;
