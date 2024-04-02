@@ -5237,7 +5237,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.34010315, y: 0.00077819824}
+  m_AnchoredPosition: {x: 0.34010315, y: -0.0000076293945}
   m_SizeDelta: {x: -13.110001, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2285874429527275493
@@ -7378,7 +7378,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6213080462327801810}
   m_HandleRect: {fileID: 8192945891114392421}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -29948,7 +29948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a791a7e5aa4c624b8d8cf1d3b341c97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  app: {fileID: 0}
+  app: {fileID: 8376602656543915171}
   icon_book: {fileID: 1339609148316020282}
   icon: {fileID: 21300000, guid: 4316e87d10828254385de0baa7261ae8, type: 3}
   prefab_item: {fileID: 1724297436615932, guid: d64ee9a90e6c5db46b3d2d3ab9b4da38,
@@ -30007,7 +30007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31bb9856df08bbd4b8b9d9f718b857da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  app: {fileID: 0}
+  app: {fileID: 8376602656543915171}
   icon_music: {fileID: 4253289394993704518}
   icon_music_menu: {fileID: 2913540185388664035}
   icon_music_play: {fileID: 21300000, guid: dda6659c6cccc0f4da970f4179658cc8, type: 3}
