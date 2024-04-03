@@ -29,7 +29,6 @@ public class mygirl : MonoBehaviour
     public Color32 color_sel_nomal;
     public Color32 color_sel_select;
     public Image sp_chat;
-    public GameObject button_login_in_home;
     public GameObject icon_loading;
     public Text txt_chat_me;
     public AudioSource sound_chat;
@@ -57,8 +56,6 @@ public class mygirl : MonoBehaviour
     public Sprite[] icon;
     public GameObject prefab_effect_customer;
     public GameObject[] effect_temp;
-    public GameObject prefab_effect_icon_chat;
-
 
     private bool is_waiting_voice = false;
     public Image icon_avatar;
@@ -321,8 +318,7 @@ public class mygirl : MonoBehaviour
                 this.sp_chat.color = this.color_chat;
             else
             {
-                Color myColor = new Color();
-                ColorUtility.TryParseHtmlString(chat["color"].ToString(), out myColor);
+                ColorUtility.TryParseHtmlString(chat["color"].ToString(), out Color myColor);
                 this.sp_chat.color = myColor;
             }
         }
@@ -427,7 +423,7 @@ public class mygirl : MonoBehaviour
 
     private void act_play_effect_icon_chat(Texture2D tex_icon)
     {
-        GameObject effect_icon = Instantiate(this.prefab_effect_icon_chat);
+        GameObject effect_icon = Instantiate(this.prefab_effect_customer);
         effect_icon.transform.SetParent(this.transform);
         effect_icon.transform.localPosition = Vector3.zero;
         effect_icon.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -531,7 +527,7 @@ public class mygirl : MonoBehaviour
         //next nhac
         if (effect_str == "30")this.panel_music.btn_next_music();
         //Show me
-        if (effect_str == "32") this.show_user();
+        if (effect_str == "32") this.Btn_show_user();
         //Show list radio
         if (effect_str == "33") this.show_list_radio();
         //show list person
@@ -832,13 +828,11 @@ public class mygirl : MonoBehaviour
         {
             this.panel_btn_main.SetActive(false);
             this.panel_msg_menu.SetActive(true);
-            this.button_login_in_home.SetActive(false);
         }
         else
         {
             this.panel_btn_main.SetActive(true);
             this.panel_msg_menu.SetActive(false);
-            if(this.carrot.is_online())this.button_login_in_home.SetActive(true);
         }
     }
 
@@ -848,7 +842,7 @@ public class mygirl : MonoBehaviour
         this.show_btn_main(false);
     }
 
-    public void show_user()
+    public void Btn_show_user()
     {
         this.Magic_tocuh.SetActive(false);
         this.carrot.show_login();
