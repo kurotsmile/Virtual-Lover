@@ -18,8 +18,7 @@ public class Panel_learn : MonoBehaviour {
 	public GameObject btn_done;
 	public GameObject panel_question_show;
 
-	private string id_question="";
-	private string type_question="";
+	private string id_chat = "";
 
 	public Image[] btn_statu;
 	public Image[] btn_effect;
@@ -47,12 +46,10 @@ public class Panel_learn : MonoBehaviour {
 	public void set_question_show(String s_show,string id_questions,string type_questions){
 		if (s_show == "") {
 			this.panel_question_show.SetActive (false);
-			this.id_question = "";
-			this.type_question = "";
+			this.id_chat = "";
 		} else {
 			this.panel_question_show.SetActive (true);
-			this.id_question = id_questions;
-			this.type_question = type_questions;
+			this.id_chat = id_questions;
 			this.question_show_Text.text = s_show;
 		}
 		this.sel_status (1);
@@ -61,33 +58,22 @@ public class Panel_learn : MonoBehaviour {
 	}
 
 	public void delete_question(){
-		GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("learn","learn"),PlayerPrefs.GetString("learn_delete_question","learn_delete_question"),Carrot.Msg_Icon.Alert);
+		app.carrot.Show_msg(app.carrot.L("learn","learn"),app.carrot.L("learn_delete_question","learn_delete_question"),Carrot.Msg_Icon.Alert);
 		this.panel_question_show.SetActive (false);
-		this.id_question = "";
-		this.type_question = "";
+		this.id_chat = "";
 	}
 
 	[Obsolete]
 	public void submit(){
-		if (GameObject.Find ("mygirl").GetComponent<Brain> ().add_brain (this.inp_question.text, this.inp_answer.text,this.effect, this.status) == true) {
+		if (app.GetComponent<Brain> ().add_brain (this.inp_question.text, this.inp_answer.text,this.effect, this.status) == true) {
 			if (this.inp_voice.myAudioRecord.clip != null) {
-				Panel_learn.Save ("voice/" + (GameObject.Find ("mygirl").GetComponent<Brain> ().get_length () - 1) + ".wav", this.inp_voice.myAudioRecord.clip);
-				PlayerPrefs.SetString ("brain_audio_" + (GameObject.Find ("mygirl").GetComponent<Brain> ().get_length () - 1),GameObject.Find ("mygirl").GetComponent<Brain> ().get_length ()-1+".wav");
+				Panel_learn.Save ("voice/" + (app.GetComponent<Brain> ().get_length () - 1) + ".wav", this.inp_voice.myAudioRecord.clip);
+				PlayerPrefs.SetString ("brain_audio_" + (app.GetComponent<Brain> ().get_length () - 1),app.GetComponent<Brain> ().get_length ()-1+".wav");
 			} else {
-				PlayerPrefs.SetString ("brain_audio_" + (GameObject.Find ("mygirl").GetComponent<Brain> ().get_length () - 1), "0");
+				PlayerPrefs.SetString ("brain_audio_" + (app.GetComponent<Brain> ().get_length () - 1), "0");
 			}
-			GameObject.Find ("mygirl").GetComponent<Brain> ().check();
-			if (GameObject.Find("mygirl").GetComponent<mygirl>().carrot.is_online()) {
-				WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("teaching");
-				frm.AddField("id", PlayerPrefs.GetString("id"));
-				frm.AddField("question", this.inp_question.text);
-				frm.AddField("answer", this.inp_answer.text);
-				frm.AddField("status", this.status);
-				frm.AddField("effect", this.effect);
-				frm.AddField("character", PlayerPrefs.GetInt("sel_nv", 0).ToString());
-				frm.AddField("id_question", this.id_question);
-				frm.AddField("type_question", this.type_question);
-				//app.carrot.send_hide(frm, this.act_submit_data);
+			app.GetComponent<Brain> ().check();
+			if (app.carrot.is_online()) {
 				this.btn_done.SetActive (false);
 			} else {
 				this.done_learn_and_close ();
@@ -107,7 +93,7 @@ public class Panel_learn : MonoBehaviour {
 		this.inp_voice.delete_voice ();
 		this.inp_question.text = "";
 		this.inp_answer.text = "";
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().show_panel_learn (false);
+		app.show_panel_learn (false);
 	}
 		
 		

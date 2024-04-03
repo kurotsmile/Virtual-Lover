@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Carrot;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Panel_report : MonoBehaviour {
@@ -97,33 +99,12 @@ public class Panel_report : MonoBehaviour {
 	}
 
 	public void submit(){
-		if (sel_type == 0) {
-			GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("report","Report"), PlayerPrefs.GetString("report_null","report_null"),Carrot.Msg_Icon.Error);
-		} else {
-			if (sel_type == 4 && this.inp_value.text.Length < 10) {
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("report","Report"),PlayerPrefs.GetString("report_error","report_error"), Carrot.Msg_Icon.Error);
-			} else {
-				GameObject.Find("mygirl").GetComponent<mygirl>().carrot.Show_msg(PlayerPrefs.GetString("report","Report"),PlayerPrefs.GetString("report_success","report_success"), Carrot.Msg_Icon.Error);
-				this.btn_done.SetActive (false);
+		string id_chat_report = "";
+		IDictionary data_report = (IDictionary)Json.Deserialize("{}");
+		data_report["id"] = id_chat_report;
 
-				WWWForm frm = GameObject.Find("mygirl").GetComponent<mygirl>().frm_action("report");
-				if (this.type)
-					frm.AddField("type", "0");
-				else
-					frm.AddField("type", "1");
-				if (sel_type == 4)
-					frm.AddField("value_report", this.inp_value.text.ToString());
-				else if (sel_type == 1)
-					frm.AddField("value_report", this.inp_value1.text.ToString());
-				else
-					frm.AddField("value_report", this.slider_limit_report.value.ToString());
-
-				frm.AddField("sel_report", this.sel_type.ToString());
-				frm.AddField("id_question", this.id_question);
-				frm.AddField("type_question", this.type_question);
-				//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm, this.act_submit_data_report);
-			}
-		}
+		string s_data_json = app.carrot.server.Convert_IDictionary_to_json(data_report);
+		app.carrot.server.Add_Document_To_Collection("chat",id_chat_report, s_data_json, act_submit_data_report,app.Act_server_fail);
 	}
 
 	private void act_submit_data_report(string s_data){

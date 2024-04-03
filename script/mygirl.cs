@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.Networking;
-using UnityEngine.Purchasing;
 using Carrot;
 
 public class mygirl : MonoBehaviour
 {
+    [Header("Main Obj")]
     public Carrot.Carrot carrot;
 
     [Header("Panel App")]
@@ -42,7 +42,6 @@ public class mygirl : MonoBehaviour
     private int sex = 0;
     public Text txt_show_inp_chat;
     private string id_question = "";
-    private string func_server = "";
     private string str_effect;
 
     [Header("Object Game")]
@@ -64,7 +63,6 @@ public class mygirl : MonoBehaviour
     public Image icon_avatar;
 
     public string parameter_link = "";
-    public bool is_seach_music_list = false;
 
     void Start()
     {
@@ -74,8 +72,6 @@ public class mygirl : MonoBehaviour
 
         this.carrot.Load_Carrot(check_ext_app);
         this.carrot.act_after_close_all_box = this.act_after_close_all_box;
-
-        this.GetComponent<Tip_chat>().is_active = false;
         
         this.GetComponent<Brain>().check();
         this.GetComponent<Music_offline>().check();
@@ -140,10 +136,10 @@ public class mygirl : MonoBehaviour
         StructuredQuery q = new StructuredQuery("chat-" + carrot.lang.Get_key_lang());
         q.Add_where("key", Query_OP.EQUAL,"hi_"+DateTime.Now.Hour);
         q.Set_limit(1);
-        carrot.server.Get_doc(q.ToJson(),Act_msg_hi_done);
+        carrot.server.Get_doc(q.ToJson(), Act_get_chat_done, Act_server_fail);
     }
 
-    private void Act_msg_hi_done(string s_data)
+    private void Act_get_chat_done(string s_data)
     {
         Fire_Collection fc = new(s_data);
         if (!fc.is_null)
@@ -153,26 +149,10 @@ public class mygirl : MonoBehaviour
         }
     }
 
-    public WWWForm frm_action(string str_func)
+    public void Act_server_fail(string s_error)
     {
-        WWWForm frm_chat =new WWWForm();
-        frm_chat.AddField("id_question", this.id_question);
-        frm_chat.AddField("sex", PlayerPrefs.GetInt("sex", 0));
-        frm_chat.AddField("lang", PlayerPrefs.GetString("key", "vi"));
-        frm_chat.AddField("version", "1");
-        frm_chat.AddField("dates", DateTime.Now.Date.Day.ToString());
-        frm_chat.AddField("year", DateTime.Now.Date.Year.ToString());
-        frm_chat.AddField("months", DateTime.Now.Month.ToString());
-        frm_chat.AddField("hour", DateTime.Now.Hour.ToString());
-        frm_chat.AddField("minute", DateTime.Now.Minute.ToString());
-        frm_chat.AddField("id_device", SystemInfo.deviceUniqueIdentifier);
-        frm_chat.AddField("day_week", DateTime.Now.DayOfWeek.ToString());
-        frm_chat.AddField("limit_chat", PlayerPrefs.GetInt("limit_chat", 4).ToString());
-        if (this.sex == 0)
-            frm_chat.AddField("character_sex", "1");
-        else
-            frm_chat.AddField("character_sex", "0");
-        return frm_chat;
+        carrot.Show_msg("Error", s_error, Msg_Icon.Error);
+        carrot.play_vibrate();
     }
 
     public void check_show_ads()
@@ -188,8 +168,10 @@ public class mygirl : MonoBehaviour
     public void act_hit()
     {
         this.count_time_next_chat = 0;
-        WWWForm frm_chat = this.frm_action("hit");
-        //this.carrot.send(frm_chat, act_chat_girl);
+        StructuredQuery q = new("chat-" + carrot.lang.Get_key_lang());
+        q.Add_where("key", Query_OP.EQUAL, "hit");
+        q.Set_limit(1);
+        carrot.server.Get_doc(q.ToJson(),Act_get_chat_done,Act_server_fail);
     }
 
     void Update()
@@ -206,7 +188,7 @@ public class mygirl : MonoBehaviour
                 this.count_time_next_chat += 1f * Time.deltaTime;
                 if (this.count_time_next_chat > 23f)
                 {
-                    WWWForm frm_chat = this.frm_action("bat_chuyen");
+                    //WWWForm frm_chat = this.frm_action("bat_chuyen");
                     //this.carrot.send(frm_chat,act_chat_girl);
                     this.count_time_next_chat = 0f;
                     this.panel_chat_me.SetActive(false);
@@ -280,7 +262,7 @@ public class mygirl : MonoBehaviour
 
     public void play_s()
     {
-        if (this.is_seach_music_list == true && this.panel_msg_func.activeInHierarchy == true)
+        if (this.panel_msg_func.activeInHierarchy == true)
         {
             this.parameter_link = this.inpText.text.ToLower();
             this.panel_msg_func.GetComponent<Panel_msg_box_func>().show(0);
@@ -295,9 +277,9 @@ public class mygirl : MonoBehaviour
                     if (this.carrot.is_online())
                     {
                         this.icon_loading.SetActive(true);
-                        WWWForm frm_chat = this.frm_action("chat");
-                        frm_chat.AddField("func_server", this.func_server);
-                        frm_chat.AddField("text", this.inpText.text.ToLower());
+                        //WWWForm frm_chat = this.frm_action("chat");
+                        //frm_chat.AddField("func_server", this.func_server);
+                        //frm_chat.AddField("text", this.inpText.text.ToLower());
                        //this.carrot.send(frm_chat, act_chat_girl);
 
                         this.txt_chat_me.text = this.inpText.text;
@@ -348,11 +330,6 @@ public class mygirl : MonoBehaviour
 
         this.id_question = chat["id"].ToString();
 
-        if (chat["func_sever"] != null)
-            this.func_server = chat["func_sever"].ToString();
-        else
-            this.func_server = "";
-
         if (s_chat.Contains("{gio}")) s_chat = s_chat.Replace("{gio}", DateTime.Now.Hour.ToString());
         if (s_chat.Contains("{phut}")) s_chat = s_chat.Replace("{phut}", DateTime.Now.Minute.ToString());
         if (s_chat.Contains("{thu}")) s_chat = s_chat.Replace("{thu}", DateTime.Now.DayOfWeek.ToString());
@@ -381,11 +358,7 @@ public class mygirl : MonoBehaviour
 
         if (chat["link"]!=null&&chat["link"].ToString()!="")
         {
-            this.parameter_link = chat["link"].ToString();
-            if (chat["effect"].ToString() != "29" && chat["effect"].ToString() != "31")
-            {
-                Application.OpenURL(chat["link"].ToString());
-            }
+            Application.OpenURL(chat["link"].ToString());
         }
 
         if (chat["vibrate"] != null)
@@ -400,23 +373,18 @@ public class mygirl : MonoBehaviour
 
         if (carrot.get_status_sound())
         {
-            if (chat["mp3"].ToString() != "" && chat["effect"].ToString() != "2")
+            if (chat["mp3"] != null)
             {
-                string url_voice_mp3;
-                if (chat["mp3"].ToString() == "google")
-                    url_voice_mp3 = "https://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&textlen=" + s_chat.Length + "&client=tw-ob&q=" + s_chat + "&tl=" + chat["lang"].ToString();
-                else
-                    url_voice_mp3 = chat["mp3"].ToString();
-                StartCoroutine(downloadAudio(url_voice_mp3, AudioType.MPEG));
+                if (chat["mp3"].ToString() != "")
+                {
+                    string url_voice_mp3;
+                    if (chat["mp3"].ToString() == "google")
+                        url_voice_mp3 = "https://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&textlen=" + s_chat.Length + "&client=tw-ob&q=" + s_chat + "&tl=" + chat["lang"].ToString();
+                    else
+                        url_voice_mp3 = chat["mp3"].ToString();
+                    StartCoroutine(downloadAudio(url_voice_mp3, AudioType.MPEG));
+                }
             }
-        }
-
-        if (chat["mp3"].ToString() != "" && chat["effect"].ToString() == "2")
-        {
-            this.GetComponent<Music_offline>().set_action(false);
-            if(chat["data_text"]!=null) this.chat_box.Text_lyric.text = "\n\n" + chat["data_text"].ToString() + "\n";
-            this.panel_music.set_download_wating(chat["chat"].ToString(), chat["mp3"].ToString(), this.sp_chat.color, true, chat["data_text"].ToString(), chat["video"].ToString(), chat["artist"].ToString(), chat["album"].ToString(), chat["genre"].ToString(), chat["year"].ToString(), chat["avatar_music"].ToString(), chat["lang"].ToString());
-            this.panel_music.id_chat_music = this.id_question;
         }
 
         this.inpText.text = "";
@@ -610,11 +578,6 @@ public class mygirl : MonoBehaviour
         this.carrot.show_rate();
     }
 
-    public void set_messager()
-    {
-        this.inpText.text = this.GetComponent<Tip_chat>().txt_tip_chat.text;
-    }
-
     public void setting_reset_all_data()
     {
         this.GetComponent<Music_offline>().delete_all();
@@ -669,13 +632,6 @@ public class mygirl : MonoBehaviour
     {
         this.Magic_tocuh.SetActive(false);
         this.GetComponent<Brain>().show_data_brain();
-    }
-
-    public void show_panel_tip_chat()
-    {
-        this.Magic_tocuh.SetActive(false);
-        Carrot_Box box=this.carrot.Create_Box(carrot.L("tip_chat", "Tip chat"), this.GetComponent<Tip_chat>().icon);
-        this.GetComponent<Tip_chat>().show_list_tip(box.area_all_item);
     }
 
     public void delete_brain_book(int index)
@@ -740,7 +696,7 @@ public class mygirl : MonoBehaviour
 
     public void view_url_copyright()
     {
-        Application.OpenURL(PlayerPrefs.GetString("setting_copyright_url", "http://carrotstore.com/privacy_policy"));
+        Application.OpenURL(carrot.L("setting_copyright_url", "http://carrotstore.com/privacy_policy"));
     }
 
     [ContextMenu("List Music")]
@@ -798,28 +754,14 @@ public class mygirl : MonoBehaviour
         this.panel_msg_func.GetComponent<Panel_msg_box_func>().show(4);
     }
 
-
     public void show_report(bool is_show)
     {
 
     }
 
-    public void show_chat_by_id(string id)
-    {
-        this.show_btn_main(false);
-        WWWForm frm_chat = this.frm_action("show_chat");
-        frm_chat.AddField("id_chat", id);
-        //this.carrot.send(frm_chat, this.act_chat_girl);
-        this.panel_msg_func.GetComponent<Panel_msg_box_func>().btn_close();
-    }
-
     public void show_chat_by_id_lang(string id, string lang)
     {
         this.show_btn_main(false);
-        WWWForm frm_chat = this.frm_action("show_chat");
-        frm_chat.AddField("id_chat", id);
-        frm_chat.AddField("lang_chat", lang);
-        //this.carrot.send(frm_chat, this.act_chat_girl);
         this.panel_msg_func.GetComponent<Panel_msg_box_func>().btn_close();
     }
 

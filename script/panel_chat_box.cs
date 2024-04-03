@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class panel_chat_box : MonoBehaviour {
@@ -109,7 +106,6 @@ public class panel_chat_box : MonoBehaviour {
 		if (type_info == "genre") GameObject.Find("mygirl").GetComponent<mygirl>().parameter_link = this.txt_music_genre.text;
 
 		GameObject.Find("mygirl").GetComponent<mygirl>().panel_msg_func.SetActive(true);
-		GameObject.Find("mygirl").GetComponent<mygirl>().panel_msg_func.GetComponent<Panel_msg_box_func>().send_id_from_sub_menu = type_info;
 		GameObject.Find("mygirl").GetComponent<mygirl>().panel_msg_func.GetComponent<Panel_msg_box_func>().show(0);
 	}
 }

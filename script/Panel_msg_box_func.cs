@@ -27,8 +27,6 @@ public class Panel_msg_box_func : MonoBehaviour {
 	public GameObject panel_tip_seach_list_music;
 	public Button[] btn_opt_music;
 
-	public string send_id_from_sub_menu = "";
-
 	private Carrot_Box box;
 
 	public void show(int func) {
@@ -42,36 +40,38 @@ public class Panel_msg_box_func : MonoBehaviour {
 			this.gameObject.SetActive(true);
 			app.show_magic_touch(false);
 			this.check_option_music();
-
-			WWWForm frm = app.frm_action("list_music");
-			frm.AddField("key_seach", app.parameter_link);
-			frm.AddField("search_option", PlayerPrefs.GetInt("sel_option_music", 0).ToString());
-			app.is_seach_music_list = true;
-			//app.carrot.send(frm, this.act_get_list_music);
 		}
 
 		if (func == 1) {
+			/*
 			WWWForm frm = app.frm_action("list_background");
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
+			*/
 			//app.carrot.send(frm, this.act_get_list_background);
 		}
 
 		if (func == 2) {
+			/*
 			WWWForm frm = app.frm_action("list_contact");
 			frm.AddField("search", app.parameter_link);
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
+			*/
 			//app.carrot.send(frm, this.act_get_list_contact);
 		}
 
 		if (func == 3) {
+			/*
 			WWWForm frm = app.frm_action("list_radio");
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
+			*/
 			//app.carrot.send(frm, this.act_get_list_radio);
 		}
 
 		if (func == 4) {
+			/*
 			WWWForm frm = app.frm_action("list_person");
 			frm.AddField("id_sub_menu", this.send_id_from_sub_menu);
+			*/
 			//app.carrot.send(frm, this.act_get_list_person);
 		}
 
@@ -105,14 +105,9 @@ public class Panel_msg_box_func : MonoBehaviour {
 			tip_chat_item.transform.SetParent(tr_body);
 			tip_chat_item.transform.localPosition = new Vector3(tip_chat_item.transform.localPosition.x, tip_chat_item.transform.localPosition.y, 0f);
 			tip_chat_item.transform.localScale = new Vector3(1f, 1f, 1f);
-			tip_chat_item.GetComponent<Panel_msg_item>().id = chat["id_chat"].ToString();
-			tip_chat_item.GetComponent<Panel_msg_item>().value.text = chat["chat"].ToString();
-			tip_chat_item.GetComponent<Panel_msg_item>().lang = chat["lang_chat"].ToString();
 			Color myColor = new Color();
 			ColorUtility.TryParseHtmlString(chat["color"].ToString(), out myColor);
-			tip_chat_item.GetComponent<Panel_msg_item>().img.color = myColor;
 		}
-		app.is_seach_music_list = true;
 		app.act_no_magic_touch();
 	}
 
@@ -127,8 +122,6 @@ public class Panel_msg_box_func : MonoBehaviour {
 			tip_chat_item.transform.SetParent(tr_body);
 			tip_chat_item.transform.localPosition = new Vector3(tip_chat_item.transform.localPosition.x, tip_chat_item.transform.localPosition.y, 0f);
 			tip_chat_item.transform.localScale = new Vector3(1f, 1f, 1f);
-			tip_chat_item.GetComponent<Panel_msg_item>().id = bk["url"].ToString();
-			app.carrot.get_img(bk["url_thumb"].ToString(), tip_chat_item.GetComponent<Panel_msg_item>().img);
 		}
 	}
 
@@ -198,15 +191,11 @@ public class Panel_msg_box_func : MonoBehaviour {
 	}
 
 	public void btn_close(){
-		this.send_id_from_sub_menu = "";
         StopAllCoroutines ();
 		this.gameObject.SetActive (false);
 		this.panel_tip_seach_list_music.SetActive (false);
 		app.show_btn_main (false);
 		app.show_magic_touch (true);
-		if (this.id_func == 0) {
-			app.is_seach_music_list = false;
-		}
 	}
 
 	public void set_bk(string url){

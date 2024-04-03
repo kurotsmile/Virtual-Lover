@@ -7,6 +7,10 @@ using UnityEngine.Networking;
 
 public class Panel_music_player : MonoBehaviour {
 
+	[Header("Main Obj")]
+	public mygirl app;
+
+	[Header("MusicPlayer Obj")]
 	public AudioSource soud_player_music;
 	public RawImage img_ware;
 	public Color wavebackgroundColor = Color.black; 
@@ -136,7 +140,7 @@ public class Panel_music_player : MonoBehaviour {
 
 		if (this.is_radio) {
 			if (this.soud_player_music.isPlaying == false) {
-				this.txt_name_player.text = string.Format (PlayerPrefs.GetString("wait_radio","wait_radio")+" ({0:N0}) KB", this.soud_player_music.GetComponent<RadioPlayer> ().CurrentBufferSize / 1024);
+				this.txt_name_player.text = string.Format (app.carrot.L("wait_radio","wait_radio")+" ({0:N0}) KB", this.soud_player_music.GetComponent<RadioPlayer> ().CurrentBufferSize / 1024);
 			}else{
 				this.txt_fnc_time_play.text = string.Format ("{0}:{1:00}", (int)this.soud_player_music.GetComponent<RadioPlayer>().PlayTime / 60, (int)this.soud_player_music.GetComponent<RadioPlayer> ().PlayTime % 60);
 				this.txt_info_radio.text = string.Format ("{0:N0} KB", this.soud_player_music.GetComponent<RadioPlayer>().CurrentDownloadSpeed / 1024);
@@ -208,8 +212,8 @@ public class Panel_music_player : MonoBehaviour {
 		this.soud_player_music.clip = null;
 		this.slider_music.value = 0f;
 		StartCoroutine (downloadAudios (url_player));
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().set_bk_music (false);
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().set_fnc_music (false);
+		app.set_bk_music (false);
+		app.set_fnc_music (false);
 		this.btn_download.SetActive (is_offline);
 		this.panel_radio_info.SetActive (false);
 		this.is_offline = is_offline;
@@ -273,8 +277,8 @@ public class Panel_music_player : MonoBehaviour {
 		this.panel_radio_info.SetActive (true);
 		this.panel_player_download.SetActive (false);
 		this.soud_player_music.clip = null;
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().set_bk_music (false);
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().set_fnc_music (true);
+		app.set_bk_music (false);
+		app.set_fnc_music (true);
 		this.panel_radio_info.SetActive (true);
 		this.panel_radio_info_image.sprite = icon_radio;
         this.soud_player_music.GetComponent<RadioPlayer> ().Restart (2f);
@@ -313,11 +317,11 @@ public class Panel_music_player : MonoBehaviour {
 		if (this.soud_player_music.clip != null&&this.is_radio==false) {
 			if (this.is_view_bk) {
 				this.is_view_bk = false;
-				GameObject.Find ("mygirl").GetComponent<mygirl> ().set_bk_music (false);
+				app.set_bk_music (false);
 			} else {
-				GameObject.Find ("mygirl").GetComponent<mygirl> ().set_skybox_Texture (texture);
+				app.set_skybox_Texture (texture);
 				this.is_view_bk = true;
-				GameObject.Find ("mygirl").GetComponent<mygirl> ().set_bk_music (true);
+				app.set_bk_music (true);
 				GameObject.Find("mygirl").GetComponent<mygirl>().chat_box.view_info_panel_music();
 			}
 		}
@@ -327,11 +331,11 @@ public class Panel_music_player : MonoBehaviour {
 		this.soud_player_music.clip = null;
 		this.soud_player_music.Stop ();
         this.soud_player_music.GetComponent<RadioPlayer>().Stop();
-        GameObject.Find ("mygirl").GetComponent<mygirl> ().set_fnc_music (false);
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().play_music_and_dance (false);
+        app.set_fnc_music (false);
+		app.play_music_and_dance (false);
 		if (this.is_view_bk) {
 			this.is_view_bk = false;
-			GameObject.Find ("mygirl").GetComponent<mygirl> ().set_bk_music (false);
+			app.set_bk_music (false);
 		}
 
 		if (this.panel_audio_setting.activeInHierarchy == true) {
@@ -344,9 +348,9 @@ public class Panel_music_player : MonoBehaviour {
 	public void btn_next_music(){
 		this.audio_setting_close ();
 		if (this.is_offline==false) {
-			GameObject.Find ("mygirl").GetComponent<Music_offline> ().next_music ();
+			app.GetComponent<Music_offline> ().next_music ();
 		} else {
-			WWWForm frm_chat = GameObject.Find("mygirl").GetComponent<mygirl> ().frm_action ("next_music");
+			//WWWForm frm_chat = GameObject.Find("mygirl").GetComponent<mygirl> ().frm_action ("next_music");
 			//GameObject.Find("mygirl").GetComponent<mygirl>().carrot.send(frm_chat, GameObject.Find("mygirl").GetComponent<mygirl>().act_chat_girl);
 		}
 	}
@@ -398,17 +402,15 @@ public class Panel_music_player : MonoBehaviour {
 		} else {
 			this.panel_audio_setting.SetActive (true);
 			this.img_btn_audio_setting.color = Color.yellow;
-			GameObject.Find ("mygirl").GetComponent<mygirl> ().show_magic_touch (false);
+			app.show_magic_touch (false);
 		}
 	}
-
 
 	public void audio_setting_close(){
 		this.panel_audio_setting.SetActive (false);
 		this.img_btn_audio_setting.color = Color.white;
-		GameObject.Find ("mygirl").GetComponent<mygirl> ().show_magic_touch (true);
+		app.show_magic_touch (true);
 	}
-
 
 	public void show_video(){
         this.is_click_control = true;
