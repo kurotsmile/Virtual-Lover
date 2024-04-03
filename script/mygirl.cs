@@ -57,6 +57,7 @@ public class mygirl : MonoBehaviour
     public Sprite[] icon;
     public GameObject prefab_effect_customer;
     public GameObject[] effect_temp;
+    public GameObject prefab_effect_icon_chat;
 
 
     private bool is_waiting_voice = false;
@@ -107,7 +108,7 @@ public class mygirl : MonoBehaviour
         if (PlayerPrefs.GetString("lang") == "")
         {
             this.no_magic_touch();
-            this.carrot.show_list_lang(this.load_msg_start);
+            this.carrot.lang.Show_list_lang(this.load_msg_start);
         }
         else
             this.load_msg_start("");
@@ -371,6 +372,26 @@ public class mygirl : MonoBehaviour
             StartCoroutine(downloadEffectCustomer(chat["icon"].ToString()));
         }
 
+        if (chat["icon"] != null)
+        {
+            if (chat["icon"].ToString() != "")
+            {
+                string s_id_icon = chat["icon"].ToString();
+                if (s_id_icon != "undefined")
+                {
+                    Sprite sp_icon_chat = carrot.get_tool().get_sprite_to_playerPrefs(s_id_icon);
+                    if (sp_icon_chat != null)
+                    {
+                        this.act_play_effect_icon_chat(sp_icon_chat.texture);
+                    }
+                    else
+                    {
+                        if (s_id_icon != "") this.get_effect_icon_chat(s_id_icon);
+                    }
+                }
+            }
+        }
+
         if (carrot.get_status_sound())
         {
             if (chat["mp3"] != null)
@@ -390,6 +411,31 @@ public class mygirl : MonoBehaviour
         this.inpText.text = "";
         this.parameter_link = "";
         this.Magic_tocuh.SetActive(true);
+    }
+
+    private void get_effect_icon_chat(string s_id_icon)
+    {
+        carrot.server.Get_doc_by_path("icon", s_id_icon, act_get_effect_icon_chat_done);
+    }
+
+    private void act_get_effect_icon_chat_done(string s_data)
+    {
+        Fire_Document fd = new(s_data);
+        IDictionary icon_data = fd.Get_IDictionary();
+        carrot.get_img_and_save_playerPrefs(icon_data["icon"].ToString(), null, fd.Get_id(), act_play_effect_icon_chat);
+    }
+
+    private void act_play_effect_icon_chat(Texture2D tex_icon)
+    {
+        GameObject effect_icon = Instantiate(this.prefab_effect_icon_chat);
+        effect_icon.transform.SetParent(this.transform);
+        effect_icon.transform.localPosition = Vector3.zero;
+        effect_icon.transform.localScale = new Vector3(1f, 1f, 1f);
+
+        ParticleSystem sys_effec = effect_icon.GetComponent<ParticleSystem>();
+        ParticleSystemRenderer renderer_effec = sys_effec.GetComponent<ParticleSystemRenderer>();
+        renderer_effec.material.mainTexture = tex_icon;
+        Destroy(effect_icon, 3f);
     }
 
     public void create_effect(string effect_str)

@@ -12751,7 +12751,6 @@ MonoBehaviour:
   btn_opt_music:
   - {fileID: 0}
   - {fileID: 0}
-  send_id_from_sub_menu: 
 --- !u!1 &6292108330260700035
 GameObject:
   m_ObjectHideFlags: 0
@@ -13027,7 +13026,6 @@ GameObject:
   - component: {fileID: 7193820303531464526}
   - component: {fileID: 8376602656543915171}
   - component: {fileID: 7554167292912248658}
-  - component: {fileID: 1874496731807234719}
   - component: {fileID: 6794355675046512849}
   - component: {fileID: 1021649007872616388}
   - component: {fileID: 372877964982907758}
@@ -13125,9 +13123,10 @@ MonoBehaviour:
   - {fileID: 1252181873054322, guid: 76e3d81f81996244584d071b0dce8a9b, type: 3}
   - {fileID: 1224931572955212, guid: 56a8df519897d11419a59f157c21e280, type: 3}
   - {fileID: 1975727986922386, guid: 7385d88de997ff34f838d2ce878f8bc3, type: 3}
+  prefab_effect_icon_chat: {fileID: 1966328860512634, guid: fc9cca4bfbb1a004ea8d2c101cd5a521,
+    type: 3}
   icon_avatar: {fileID: 3261876218908538837}
   parameter_link: 
-  is_seach_music_list: 0
 --- !u!114 &7554167292912248658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13145,23 +13144,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 4316e87d10828254385de0baa7261ae8, type: 3}
   prefab_item: {fileID: 1724297436615932, guid: d64ee9a90e6c5db46b3d2d3ab9b4da38,
     type: 3}
---- !u!114 &1874496731807234719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6351941398794656009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54fc35f16ca426f4bbaa222ff62c4b29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: f0e28eb3b9d65cd43938f23599bad962, type: 3}
-  txt_tip_chat: {fileID: 905058903965117178}
-  prefab_tip_chat_item: {fileID: 1114177747908396, guid: b5676e7d0ba8ebc4881d86cd48a8fee3,
-    type: 3}
-  is_active: 0
 --- !u!114 &6794355675046512849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18803,6 +18785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e69ad8af1d1d4f54dbed7c923ed20c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  app: {fileID: 0}
   soud_player_music: {fileID: 5961710665163329072}
   img_ware: {fileID: 525060125908914696}
   wavebackgroundColor: {r: 0, g: 0, b: 0, a: 1}
